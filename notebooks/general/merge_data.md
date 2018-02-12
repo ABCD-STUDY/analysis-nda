@@ -102,3 +102,7 @@ In order to read the data back use
 ```r
 nda17 = readRDS("nda17.Rds")
 ```
+
+### Notes
+
+NDA data is shared as numerical columns even if the data represented in the column is categorical. As an extreme case values '0' and '1' for example might represent in one spreadsheet the categories 'Yes' and 'No', in another spreadsheet they might represent 'No' and 'Yes'. The respective NDA data dictionary will let the user know what coding was used (see Notes column).
