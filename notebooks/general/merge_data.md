@@ -4,23 +4,24 @@ The following steps will explain some of the perculiarities of the NDA17 data. S
 
 We will assume that you downloaded the spreadsheets data and placed them into a sub-directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
 
-```{r path}
+```r
 script.dir <- "~/src/analysis-nda17/notebooks"
 setwd(script.dir)
 input_list = Sys.glob(paths = c(paste(script.dir,"/../data/*.txt",sep="")))
 ```
 
 Remove all files that are not required for this merge.
-```{r remove}
+
+```r
 input_list = input_list[-grep("md5_values.txt",input_list)]
 input_list = input_list[-grep("package_info.txt",input_list)]
 # remove fast-track image03 related data
 input_list = input_list[-grep("fmriresults01.txt",input_list)]
 ```
 
-Lets read in each of the tables and normalize them. This loop will run for a couple of minutes and require close to 8GB of main memory (run on a MacBook Pro). 
+Lets read in each of the tables and normalize them. This loop will run for a couple of minutes and requires close to 8GB of main memory (run on a MacBook Pro laptop).
 
-```{r tables}
+```r
 tables = list()
 for (p in 1:length(input_list)) {
     input = input_list[p]
@@ -64,7 +65,7 @@ for (p in 1:length(input_list)) {
 
 Now merge the tables into a single spreadsheet.
 
-```{r merge}
+```r
 t2 = tables
 while ( length(t2) > 1 ) {
     print("iteration")
@@ -78,10 +79,17 @@ while ( length(t2) > 1 ) {
     }
     t2 = t2[access]
 }
+nda17 = t2[[1]]
 ```
 
-As a last step we can save the data in R's native format.
+As a last step we can save the data in R's native format. This format will greatly improve the speed of later analysis.
 
-```{r export}
+```r
+saveRDS(nda17, "nda17.Rds")
+```
 
+In order to read the data back in later use
+
+```r
+loadRDS("nda17.Rds")
 ```
