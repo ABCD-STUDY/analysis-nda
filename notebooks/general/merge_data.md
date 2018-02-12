@@ -51,7 +51,7 @@ for (p in 1:length(input_list)) {
     dt = dt[,!(names(dt) %in% c("collection_id", "dataset_id", "collection_title", "promoted_subjectkey", "site", "week", "subjectkey", "study_cohort_name"))]
 
     # remove further columns that are not required
-    dt = dt[,!(names(dt) %in% c("visit", "dataset", "beh_nback_all_total", "beh_mid_perform_flag", "beh_mid_nruns"))]
+    dt = dt[,!(names(dt) %in% c("visit", "dataset", "beh_nback_all_total", "beh_mid_perform_flag", "beh_mid_nruns", "lmt_run"))]
 
     # if eventname does not exist, add it back
     if (!("eventname" %in% names(dt))) dt$eventname = "baseline_year_1_arm_1"
@@ -81,8 +81,10 @@ while ( length(t2) > 1 ) {
        # merge by a list of columns that should be present in each instrument
        t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
        # debugging output, 4,524 rows should survive the merge
-       print(paste(" rows before: ", bm[1], dim(t2[[i+1]])[1], " files: ", input_list[i], input_list[i+1]," rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
+       print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " files: ", input_list[i], input_list[i+1]," rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
+    if (length(t2) %% 2 != 0) access = append(access,length(t2))
+    print(paste(access, sep=" "))
     t2 = t2[access]
 }
 nda17 = t2[[1]]
