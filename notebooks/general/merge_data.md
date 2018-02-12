@@ -81,14 +81,14 @@ while ( length(t2) > 1 ) {
        # merge by a list of columns that should be present in each instrument
        t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
        # debugging output, 4,524 rows should survive the merge
-       print(paste(" rows before: ",bm[1],dim(t2[[i+1]])[1],"\nfiles: ", input_list[i],input_list[i+1],"\n rows after: ",dim(t2[[i]])[1], indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
+       print(paste(" rows before: ", bm[1], dim(t2[[i+1]])[1], " files: ", input_list[i], input_list[i+1]," rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
     t2 = t2[access]
 }
 nda17 = t2[[1]]
 ```
 
-As a last step we can save the data in R's native file format.
+As a last step we can save the data in R's native (binary) file format.
 
 ```r
 saveRDS(nda17, "nda17.Rds")
