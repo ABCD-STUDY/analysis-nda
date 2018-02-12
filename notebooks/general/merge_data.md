@@ -82,14 +82,14 @@ while ( length(t2) > 1 ) {
 nda17 = t2[[1]]
 ```
 
-As a last step we can save the data in R's native format. This format will greatly improve the speed of later analysis.
+As a last step we can save the data in R's native format.
 
 ```r
 saveRDS(nda17, "nda17.Rds")
 ```
 
-In order to read the data back in later use
+In order to read the data back use
 
 ```r
-loadRDS("nda17.Rds")
+nda17 = readRDS("nda17.Rds")
 ```
