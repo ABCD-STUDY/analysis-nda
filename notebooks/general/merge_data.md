@@ -5,9 +5,9 @@ Starting from the official download package "ABCD-RELEASE-1" the R-code below wi
 We will assume that you downloaded the spreadsheets data and placed them into a sub-directory "data" into the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
-script.dir <- "~/src/analysis-nda17/notebooks"
+script.dir <- "~/src/analysis-nda17/notebooks/general"
 setwd(script.dir)
-input_list = Sys.glob(paths = c(paste(script.dir,"/../data/*.txt",sep="")))
+input_list = Sys.glob(paths = c(paste(script.dir,"/../../data/*.txt",sep="")))
 ```
 
 Remove all files that are not required for this merge.
@@ -81,7 +81,7 @@ while ( length(t2) > 1 ) {
        # merge by a list of columns that should be present in each instrument
        t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
        # debugging output, 4,524 rows should survive the merge
-       print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " files: ", input_list[i], input_list[i+1]," rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
+       print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
     if (length(t2) %% 2 != 0) access = append(access,length(t2))
     print(paste(access, sep=" "))
@@ -89,6 +89,7 @@ while ( length(t2) > 1 ) {
 }
 nda17 = t2[[1]]
 ```
+The above nda17 data frame should contain 4,524 rows and about 38,000 columns.
 
 As a last step we can save the data in R's native (binary) file format.
 
