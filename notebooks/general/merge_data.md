@@ -1,8 +1,8 @@
 ## Merge NDA17 data into a single spreadsheet
 
-The following steps will explain some of the perculiarities of the NDA17 data. Starting from the official download package "ABCD-RELEASE-1" the R-code below will merge the data provided in the different spreadsheets into a single large spreadsheet. Please notice that this might not be the most efficient way to handle this data. In general we would suggest to use a database layout and packages like dplyr to handle the data.
+Starting from the official download package "ABCD-RELEASE-1" the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless the code below is provided to illustrate some of the perculiarities of the data.
 
-We will assume that you downloaded the spreadsheets data and placed them into a sub-directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
+We will assume that you downloaded the spreadsheets data and placed them into a sub-directory "data" into the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
 script.dir <- "~/src/analysis-nda17/notebooks"
@@ -19,7 +19,7 @@ input_list = input_list[-grep("package_info.txt",input_list)]
 input_list = input_list[-grep("fmriresults01.txt",input_list)]
 ```
 
-Lets read in each of the tables and normalize them. This loop will run for a couple of minutes and requires close to 8GB of main memory (run on a MacBook Pro laptop).
+Read in each of the tables individually and normalize them. This loop will run for a couple of minutes and requires close to 8GB of main memory.
 
 ```r
 tables = list()
@@ -69,7 +69,7 @@ for (p in 1:length(input_list)) {
 }
 ```
 
-Now merge the tables into a single spreadsheet.
+Merge the tables into a single spreadsheet.
 
 ```r
 t2 = tables
@@ -88,7 +88,7 @@ while ( length(t2) > 1 ) {
 nda17 = t2[[1]]
 ```
 
-As a last step we can save the data in R's native format.
+As a last step we can save the data in R's native file format.
 
 ```r
 saveRDS(nda17, "nda17.Rds")
