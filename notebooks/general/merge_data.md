@@ -25,12 +25,18 @@ Lets read in each of the tables and normalize them. This loop will run for a cou
 tables = list()
 for (p in 1:length(input_list)) {
     input = input_list[p]
+    print(paste("import: ", input, " [", p, "/",length(input_list), "]", sep=""))
 
     # read data as tab-separated table
     dt = read.table(file = input, sep = '\t',header = TRUE)
 
     # first data row is description, remove those
     dt = dt[-1,]
+    dt = droplevels(dt)
+
+    # Only keep the last submission's data
+    # (This can be removed as soon as the download ABCD-RELEASE-1 is correct.) 
+    if (length(levels(dt$dataset_id)) > 1) dt = dt[which(dt$dataset_id==max(as.integer(levels(dt$dataset_id)))),]
 
     # image data could use more than one run, lets focus on the average and remove run 1 and run 2
     if ("lmt_run" %in% names(dt) && "AVERAGE" %in% levels(dt$lmt_run)) dt = dt[dt$lmt_run == "AVERAGE",]
@@ -42,7 +48,7 @@ for (p in 1:length(input_list)) {
     if ("visit" %in% names(dt)) dt$eventname = dt$visit
 
     # drop columns introduced by NDA, they are not required for the resulting table
-    dt = dt[,!(names(dt) %in% c("collection_id", "dataset_id", "collection_title", "promoted_subjectkey", "site", "week", "subjectkey"))]
+    dt = dt[,!(names(dt) %in% c("collection_id", "dataset_id", "collection_title", "promoted_subjectkey", "site", "week", "subjectkey", "study_cohort_name"))]
 
     # remove further columns that are not required
     dt = dt[,!(names(dt) %in% c("visit", "dataset", "beh_nback_all_total", "beh_mid_perform_flag", "beh_mid_nruns"))]
@@ -75,7 +81,7 @@ while ( length(t2) > 1 ) {
        # merge by a list of columns that should be present in each instrument
        t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
        # debugging output, 4,524 rows should survive the merge
-       print(paste(dim(t2[[i]])[1],bm[1],input_list[i],dim(t2[[i+1]])[1],input_list[i+1],i,i+1))
+       print(paste(" rows before: ",bm[1],dim(t2[[i+1]])[1],"\nfiles: ", input_list[i],input_list[i+1],"\n rows after: ",dim(t2[[i]])[1], indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
     t2 = t2[access]
 }
