@@ -33,7 +33,7 @@ for (p in 1:length(input_list)) {
 }
 ```
 
-The first row in each spreadsheet is the element description. Lets remove those for our data tables. This information is already present in the [https://ndar.nih.gov/data_dictionary.html?source=ABCD&submission=ALL](ABCD Data Dictionaries).
+The first row in each spreadsheet is the element description. Lets remove those for our data tables. This information is already present in the [ABCD Data Dictionaries](https://ndar.nih.gov/data_dictionary.html?source=ABCD&submission=ALL).
 ```r
 for (p in 1:length(tables)) {
     dt = tables[[p]]
