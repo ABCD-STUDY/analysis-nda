@@ -2,7 +2,7 @@
 
 Starting from the official download package "ABCD-RELEASE-1" the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless the code below is provided to illustrate some of the perculiarities of the data.
 
-We will assume that you downloaded the spreadsheets data and placed them into a sub-directory "data" into the root folder of this project. Specify the path and read in a list of all the text files provided.
+We will assume that you downloaded the spreadsheets data (3.2GB) and placed them into a sub-directory "data" into the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
 script.dir <- "~/src/analysis-nda17/notebooks/general"
@@ -155,13 +155,13 @@ while ( length(t2) > 1 ) {
 }
 nda17 = t2[[1]]
 ```
-The nda17 data frame should contain 4,524 rows and about 38,000 columns. As a last step we can save the data in R's native (binary) file format.
+The nda17 data frame should contain 4,524 rows and about 38,000 columns. As a last step we can save the data in R's native file format (780MB).
 
 ```r
 saveRDS(nda17, "nda17.Rds")
 ```
 
-In order to read the data back into memory (requires about 5.5GB) use:
+In order to read the data back into memory (5.5GB) use:
 ```r
 nda17 = readRDS("nda17.Rds")
 ```
