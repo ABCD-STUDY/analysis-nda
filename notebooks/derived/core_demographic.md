@@ -11,7 +11,7 @@ The following sections extend the nda17 data frame by some core demographic colu
 
 Most of these are simple re-definitions of existing columns with simplier names, other columns are re-scored versions of nda17 columns.
 
-Start by readoing in the merged data from disk.
+Start by reading in the merged data from disk.
 ```r
 nda17 = readRDS("nda17.Rds")
 ```
