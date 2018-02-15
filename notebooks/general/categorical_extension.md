@@ -1,8 +1,8 @@
-## Convert numerical columns to categorical variables
+## Convert some numerical columns to categorical variables
 
 Categorical variables are coded on NDA as numbers even if they have been collected as categorical variables in ABCD's database. The following steps will convert the numerical columns back into factor variables. This will matter in statistical models as factors have to be treated separately from continuous variables.
 
-Read in the merged data (see [merge_data](notebooks/general/merge_data.md)) and a table that contains the type assignments for each factor. The second table is stored in a file that is part of this repository and has been generated from the original REDCap data dictionaries.
+Read in the merged data (see [merge_data](notebooks/general/merge_data.md)) and a table that contains the factors for each categorical variable. The second table is stored in a csv file that is part of this repository and has been generated from the original REDCap data dictionaries.
 
 ```r
 nda17 = readRDS("nda17.Rds")
@@ -34,3 +34,5 @@ We can save this new version of the ABCD data combined spreadsheet now:
 ```r
 saveRDS(nda17, "nda17.Rds")
 ```
+
+Looking at the factor levels you will find that some of them are more difficult to read than others. Some contain HTML instructions for two language versions (English and Spanish) for each level. For dropdown entries the language encoding cannot use HTML, instead the following pattern is used: '##en##English##/en## ##es##Spanish##/es##'.
