@@ -2,7 +2,7 @@
 
 Starting from the official download package "ABCD-RELEASE-1" the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless the code below is provided to illustrate some of the perculiarities of the data.
 
-We will assume that you downloaded the spreadsheets data (3.2GB) and placed them into a sub-directory "data" into the root folder of this project. Specify the path and read in a list of all the text files provided.
+We will assume that you downloaded the spreadsheets data (3.2GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
 script.dir <- "~/src/analysis-nda17/notebooks/general"
@@ -146,7 +146,7 @@ while ( length(t2) > 1 ) {
        # merge by a list of columns that should be present in each instrument, replace the first element with the merge result
        t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
        # debugging output, 4,524 rows should survive the merge
-       cat(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
+       print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
     # for odd number of instruments add the last spreadsheet back to the list
     if (length(t2) %% 2 != 0) access = append(access,length(t2))
@@ -169,4 +169,6 @@ nda17 = readRDS("nda17.Rds")
 ### Notes
 
 NDA data is shared as numerical columns even if the data represented in the columns is categorical. As an extreme case values '0' and '1' for example might represent in one spreadsheet the categories 'Yes' and 'No', in another spreadsheet they might represent 'No' and 'Yes'. The respective NDA data dictionary will let the user know what coding was used (see Notes column).
+
+See the [categorical_extension script](notebooks/general/categorical_extension.md) on how to convert the appropriate numerical columns from NDA into categorical/factor variables.
 
