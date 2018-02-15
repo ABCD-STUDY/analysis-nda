@@ -1,6 +1,6 @@
 ## Definition of convenience variables
 
-The following sections extend the nda17 data frame by some core demographic columns.
+The following sections extend the nda17 data frame (see [https://github.com/ABCD-STUDY/analysis-nda17](creating a single data spreadsheet)) by some core demographic columns.
  - subjectid
  - age in years
  - female
