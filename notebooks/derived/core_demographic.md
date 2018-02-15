@@ -48,7 +48,7 @@ highest.household.income[nda17$demo_comb_income_v2 %in% c(NA, "999", "777")] = "
 nda17$highest.household.income = factor(highest.household.income)
 ```
 
-### Highest level of household education
+### Highest level of parent education
 
 ```r
 highest.education = rep("999", length(nda17$demo_prnt_ed_v2))
