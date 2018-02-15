@@ -6,7 +6,7 @@ The data for this release can be downloaded from NDA using a pre-generated packa
 
  - [Merge individual spreadsheets (using R)](notebooks/general/merge_data.md)
  - [Recover categorical variables (using R)](notebooks/general/categorical_extension.md)
- - [Recode some core demographic variables (using R)](notebooks/derived/core_demographics.md)
+ - [Recode some core demographic variables (using R)](notebooks/derived/core_demographic.md)
  - [Merge individual data dictionaries (using R)](notebooks/general/merge_data_dictionaries.md)
 
 Let us know if you have a script that you think should be part of this project.
