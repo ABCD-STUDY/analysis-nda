@@ -8,5 +8,6 @@ The data for this release can be downloaded from NDA using a pre-generated packa
  - [Recover categorical variables (using R)](notebooks/general/categorical_extension.md)
  - [Recode some core demographic variables (using R)](notebooks/derived/core_demographic.md)
  - [Merge individual data dictionaries (using R)](notebooks/general/merge_data_dictionaries.md)
+ - [Quality control metrices for image data (using R)](notebooks/drived/image_qc.md)
 
 Let us know if you have a script that you think should be part of this project.

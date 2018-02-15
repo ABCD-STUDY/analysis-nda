@@ -9,7 +9,7 @@ List participants which passed the FreeSurfer quality control check (this does n
 ```r
 goodFreeSurfer <- nda17$src_subject_id[which(nda17$fsqc_qc == "pass")]
 goodFreeSurfer <- goodFreeSurfer[!is.na(goodFreeSurfer)]
-print(paste("Yay: ", length(goodFreeSurfer), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$fsqc_qc)])-length(goodFreeSurfer), sep=""))
+print(paste("Yay: ", length(goodFreeSurfer), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$fsqc_qc)]) - length(goodFreeSurfer), sep=""))
 ```
 
 ## Participants with a minimum degree of freedom
@@ -21,5 +21,5 @@ percentage = 0.1
 threshold = as.numeric(quantile(as.numeric(nda17$mid_beta_seg_dof.x), probs=c(percentage), na.rm= TRUE))
 goodTask <- nda17$src_subject_id[as.numeric(nda17$mid_beta_seg_dof.x) >= threshold]
 goodTask <- goodTask[!is.na(goodTask)]
-print(paste("Yay: ", length(goodTask), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$mid_beta_seg_dof.x)])-length(goodTask), sep=""))
+print(paste("Yay: ", length(goodTask), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$mid_beta_seg_dof.x)]) - length(goodTask), sep=""))
 ```
