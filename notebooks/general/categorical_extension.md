@@ -13,10 +13,10 @@ This loop will go throught the column names stored in the categories table and c
 
 ```r
 for (kitty in categories$name) {
-    kitty = "rel_relationship"
     if (!(kitty %in% names(nda17))) next
     choices = strsplit(as.character(categories[categories$name == kitty,]$choices), "|",fixed=TRUE)
     lev = levels(nda17[[kitty]])
+    orig_levels = lev
     for (c in 1:length(choices[[1]])) {
         choice = choices[[1]][c]
         number = trimws(strsplit(choice, ",")[[1]][1])
@@ -27,7 +27,7 @@ for (kitty in categories$name) {
         label = trimws(label)
         lev[which(lev == number)] = label
     }
-    nda17[[kitty]] = factor(nda17[[kitty]],labels=lev)
+    nda17[[kitty]] = factor(nda17[[kitty]],levels=orig_levels, labels=lev)
 }
 ```
 

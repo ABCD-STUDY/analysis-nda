@@ -40,11 +40,19 @@ nda17$female = factor(as.numeric(nda17$gender == "F"), levels = 0:1, labels = c(
 
 ```r
 highest.household.income = as.character(nda17$demo_comb_income_v2)
-highest.household.income[nda17$demo_comb_income_v2 %in% c(1:6)] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 %in% c(7,8)] = "[>=50K & <100K]"
-highest.household.income[nda17$demo_comb_income_v2 %in% c(9:10)] = "[>=100K]"
-highest.household.income[nda17$demo_comb_income_v2 %in% c(11:12)] = NA
-highest.household.income[nda17$demo_comb_income_v2 %in% c(NA, "999", "777")] = ""
+highest.household.income[nda17$demo_comb_income_v2 == "##en##Less than $5,000##/en####es##Menos de $5,000##/es##"] = "[<50K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$5,000 through $11,999##/en####es##De $5,000 a $11,999##/es##"] = "[<50K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$12,000 through $15,999##/en####es##De $12,000 a $15,999##/es##"] = "[<50K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$16,000 through $24,999##/en####es##De $16,000 a $24,999##/es##"] = "[<50K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$25,000 through $34,999##/en####es##De $25,000 a $34,999##/es##"] = "[<50K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$35,000 through $49,999##/en####es##De $35,000 a $49,999##/es##"] = "[<50K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$50,000 through $74,999##/en####es##De $50,000 a $74,999##/es##"] = "[>=50K & <100K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$75,000 through $99,999##/en####es##De $75,000 a $99,999##/es##"] = "[>=50K & <100K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$100,000 through $199,999##/en####es##De $100,000 a $199,999##/es##"] = "[>=100K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##$200,000 and greater##/en####es##$200,000 o más##/es##"] = "[>=100K]"
+highest.household.income[nda17$demo_comb_income_v2 == "##en##Refuse to answer##/en####es##No deseo responder##/es##"] = NA
+highest.household.income[nda17$demo_comb_income_v2 == "##en##Don't know##/en####es##No lo sé##/es##"] = NA
+highest.household.income[highest.household.income %in% c(NA, "999", "777")] = ""
 nda17$highest.household.income = factor(highest.household.income)
 ```
 
@@ -52,29 +60,50 @@ nda17$highest.household.income = factor(highest.household.income)
 
 ```r
 highest.education = rep("999", length(nda17$demo_prnt_ed_v2))
-highest.education[nda17$demo_prnt_ed_v2 == "0"] = 1
-highest.education[nda17$demo_prnt_ed_v2 == "1"] = 4
-highest.education[nda17$demo_prnt_ed_v2 == "2"] = 5
-highest.education[nda17$demo_prnt_ed_v2 == "3"] = 6
-highest.education[nda17$demo_prnt_ed_v2 == "4"] = 7
-highest.education[nda17$demo_prnt_ed_v2 == "5"] = 8
-highest.education[nda17$demo_prnt_ed_v2 == "6"] = 9
-highest.education[nda17$demo_prnt_ed_v2 == "7"] = 10
-highest.education[nda17$demo_prnt_ed_v2 == "8"] = 11
-highest.education[nda17$demo_prnt_ed_v2 == "9"] = 12
-highest.education[nda17$demo_prnt_ed_v2 == "10"] = 13
-highest.education[nda17$demo_prnt_ed_v2 == "11"] = 14
-highest.education[(nda17$demo_prnt_ed_v2 == "12") | (nda17$demo_prnt_ed_v2 == "13")] = 16
-highest.education[nda17$demo_prnt_ed_v2 == "14"] = 17
-highest.education[nda17$demo_prnt_ed_v2 == "15"] = 18
-highest.education[(nda17$demo_prnt_ed_v2 == "16") | (nda17$demo_prnt_ed_v2 == "17")] = 20
-highest.education[nda17$demo_prnt_ed_v2 == "18"] = 21
-highest.education[nda17$demo_prnt_ed_v2 == "19"] = 22
-highest.education[nda17$demo_prnt_ed_v2 == "20"] = 23
-highest.education[nda17$demo_prnt_ed_v2 == "21"] = 24
-highest.education[nda17$demo_prnt_ed_v2 == "77"] = 999
-
-highest.education = as.character(highest.education)
+m[0] = "##en##Never attended/Kindergarten only##/en####es##Nunca asistí/Kinder solamente##/es##"
+m[1] = "##en##1st grade##/en####es##1.er grado##/es##"
+m[2] = "##en##2nd grade##/en####es##2.º grado##/es##"
+m[3] = "##en##3rd grade##/en####es##3.er grado##/es##"
+m[4] = "##en##4th grade##/en####es##4.º grado##/es##"
+m[5] = "##en##5th grade##/en####es##5.º grado##/es##"
+m[6] = "##en##6th grade##/en####es##6.º grado##/es##"
+m[7] = "##en##7th grade##/en####es##7.º grado##/es##"
+m[8] = "##en##8th grade##/en####es##8.º grado##/es##"
+m[9] = "##en##9th grade##/en####es##9.º grado##/es##"
+m[10] = "##en##10th grade##/en####es##10.º grado##/es##"
+m[11] = "##en##11th grade##/en####es##11.º grado##/es##"
+m[12] = "##en##12th grade, no diploma##/en####es## 12.º grado, sin certificado/diploma##/es##"
+m[13] = "##en##High school graduate##/en####es##Preparatoria terminada##/es##"
+m[14] = "##en##GED or equivalent##/en####es##Diploma General de Equivalencia (GED) o equivalente##/es##"
+m[15] = "##en##Some college, no degree##/en####es##Estudios universitarios parciales; sin título##/es##"
+m[16] = "##en##Associate degree: Occupational, Technical, or Vocational##/en####es##Título de asociado: programa ocupacional, técnico o vocacional##/es##"
+m[17] = "##en##Associate degree: Academic Program##/en####es##Título de asociado: programa académico##/es##"
+m[18] = "##en##Bachelor's degree (ex. BA, AB, BS, BBS)##/en####es##Licenciatura (p. ej., BA, AB, BS, BBA)##/es##"
+m[19] = "##en##Master's degree (ex. MA, MS, MEng, MEd, MBA)##/en####es##Maestría (p. ej., MA, MS, MEng, MEd, MBA)##/es##"
+m[20] = "##en##Professional School degree (ex. MD, DDS, DVN, JD)##/en####es##Título de escuela profesional (p. ej., MD, DDS, DVM, JD)##/es##"
+m[21] = "##en##Doctoral degree (ex. PhD, EdD)##/en####es##Doctorado (p. ej., PhD, EdD)##/es##"
+m[77] = "##en##Refused to answer##/en####es##Prefiero no responder##/es##"
+highest.education[nda17$demo_prnt_ed_v2 == m[0]] = 1
+highest.education[nda17$demo_prnt_ed_v2 == m[1]] = 4
+highest.education[nda17$demo_prnt_ed_v2 == m[2]] = 5
+highest.education[nda17$demo_prnt_ed_v2 == m[3]] = 6
+highest.education[nda17$demo_prnt_ed_v2 == m[4]] = 7
+highest.education[nda17$demo_prnt_ed_v2 == m[5]] = 8
+highest.education[nda17$demo_prnt_ed_v2 == m[6]] = 9
+highest.education[nda17$demo_prnt_ed_v2 == m[7]] = 10
+highest.education[nda17$demo_prnt_ed_v2 == m[8]] = 11
+highest.education[nda17$demo_prnt_ed_v2 == m[9]] = 12
+highest.education[nda17$demo_prnt_ed_v2 == m[10]] = 13
+highest.education[nda17$demo_prnt_ed_v2 == m[11]] = 14
+highest.education[(nda17$demo_prnt_ed_v2 == m[12]) | (nda17$demo_prnt_ed_v2 == m[13])] = 16
+highest.education[nda17$demo_prnt_ed_v2 == m[14]] = 17
+highest.education[nda17$demo_prnt_ed_v2 == m[15]] = 18
+highest.education[(nda17$demo_prnt_ed_v2 == m[16]) | (nda17$demo_prnt_ed_v2 == m[17])] = 20
+highest.education[nda17$demo_prnt_ed_v2 == m[18]] = 21
+highest.education[nda17$demo_prnt_ed_v2 == m[19]] = 22
+highest.education[nda17$demo_prnt_ed_v2 == m[20]] = 23
+highest.education[nda17$demo_prnt_ed_v2 == m[21]] = 24
+highest.education[nda17$demo_prnt_ed_v2 == m[77]] = 999
 highest.education[highest.education == 999] = ""
 nda17$highest.education = factor(highest.education)
 ```
@@ -138,10 +167,10 @@ for( i in 1:length(race.ethnicity)) {
         as.numeric(isOther[i]==TRUE) >= 2) {
 
       ethnicity_recode = "999"
-      if ( (as.numeric(nda17$demo_ethn_v2[i]) == "1") || (as.numeric(nda17$demo_ethn_v2[i]) == "2") ) {
-         ethnicity_recode = as.numeric(nda17$demo_ethn_v2[i])
+      if ( (nda17$demo_ethn_v2[i] == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") || (nda17$demo_ethn_v2[i] == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>") ) {
+         ethnicity_recode = nda17$demo_ethn_v2[i]
       }
-      if (ethnicity_recode == "1") {
+      if (ethnicity_recode == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") {
          race.ethnicity[i] = 3
       } else {
          race.ethnicity[i] = 5
