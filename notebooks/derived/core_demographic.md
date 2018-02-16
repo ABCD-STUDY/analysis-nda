@@ -141,7 +141,11 @@ idx = which((col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"colo
 isHispa[idx] = col[idx]
 isHispa[which(col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>")] = TRUE
 isHispa[-which(col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>")] = FALSE
+```
 
+It is worthwhile to point out here that the above category for hispanic is calculated in ABCD differently from the other race categories. In particular any ethnicity selection of hispanic will map the participant into the hispanic category regardless of the selection of one or more race categories.
+
+```r
 isAsian = rep("999", length(nda17$demo_ethn_v2))
 col = nda17$demo_ethn_v2
 idx = which((col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") | (col == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>"))
@@ -170,6 +174,7 @@ for( i in 1:length(race.ethnicity)) {
       if ( (nda17$demo_ethn_v2[i] == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") || (nda17$demo_ethn_v2[i] == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>") ) {
          ethnicity_recode = nda17$demo_ethn_v2[i]
       }
+      # even if you are mixed race or other, selecting hispanic ethnicity assigns the participant to the hispanic category
       if (ethnicity_recode == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") {
          race.ethnicity[i] = 3
       } else {
