@@ -52,7 +52,7 @@ highest.household.income[nda17$demo_comb_income_v2 == "##en##$100,000 through $1
 highest.household.income[nda17$demo_comb_income_v2 == "##en##$200,000 and greater##/en####es##$200,000 o más##/es##"] = "[>=100K]"
 highest.household.income[nda17$demo_comb_income_v2 == "##en##Refuse to answer##/en####es##No deseo responder##/es##"] = NA
 highest.household.income[nda17$demo_comb_income_v2 == "##en##Don't know##/en####es##No lo sé##/es##"] = NA
-highest.household.income[highest.household.income %in% c(NA, "999", "777")] = ""
+highest.household.income[highest.household.income %in% c(NA, "999", "777")] = NA
 nda17$highest.household.income = factor(highest.household.income)
 ```
 
@@ -104,7 +104,7 @@ highest.education[nda17$demo_prnt_ed_v2 == m[19]] = 22
 highest.education[nda17$demo_prnt_ed_v2 == m[20]] = 23
 highest.education[nda17$demo_prnt_ed_v2 == m[21]] = 24
 highest.education[nda17$demo_prnt_ed_v2 == m[77]] = 999
-highest.education[highest.education == 999] = ""
+highest.education[highest.education == 999] = NA
 nda17$highest.education = factor(highest.education)
 ```
 
