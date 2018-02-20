@@ -31,6 +31,26 @@ for (kitty in categories$name) {
 }
 ```
 
+Continuous variables are imported as characters from the NDA tables due to enclosing double-quotes. We can convert them back into numerical values based on the type contained in the NDA data dictionary (and the known list of categorical variables):
+```r
+# pull and merge the data dictionaries for ABCD from NDA
+if (!('curl' %in% installed.packages()[,"Package"]))  install.packages('curl')
+if (!('jsonlite' %in% installed.packages()[,"Package"]))  install.packages('jsonlite')
+library(jsonlite)
+abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD")
+numbers = list()
+for ( i in 1:length(abcd_instruments$shortName)) {
+    inst_name = abcd_instruments$shortName[i]
+    inst <- fromJSON(paste("https://ndar.nih.gov/api/datadictionary/v2/datastructure/", inst_name, sep=""))
+    numbers = append(numbers, inst$dataElements[inst$dataElements$type %in% c("Integer","Float"),]$name)
+}
+# remove known categorical variables
+numbers = numbers[!(numbers %in% categories$name)]
+for (i in 1:length(numbers)) {
+    nda17[unlist(numbers[i])] = as.numeric(as.character(nda17[[unlist(numbers[i])]]))
+}
+```
+
 We can save this new version of the ABCD data combined spreadsheet now:
 ```r
 saveRDS(nda17, "nda17.Rds")
