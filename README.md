@@ -12,6 +12,7 @@ The data for this release can be downloaded from NDA using a pre-generated packa
  - [Merge individual data dictionaries (using R)](notebooks/general/merge_data_dictionaries.md)
 
 #### Recode values
+ - [Impute missing core demographic variables (using R)](notebooks/general/impute_demographics.md)
  - [Recode some core demographic variables (using R)](notebooks/derived/core_demographic.md)
 
 #### Interpretation of quality control information
