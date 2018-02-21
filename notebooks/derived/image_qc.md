@@ -23,3 +23,13 @@ goodTask <- nda17$src_subject_id[as.numeric(nda17$mid_beta_seg_dof.x) >= thresho
 goodTask <- goodTask[!is.na(goodTask)]
 print(paste("Yay: ", length(goodTask), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$mid_beta_seg_dof.x)]) - length(goodTask), sep=""))
 ```
+
+## Participant by resting state mean-motion
+
+Here an example that lists mean motion for resting state scans:
+
+```r
+motion = c("src_subject_id", "rsfm_mean_motion")
+head(nda17[motion])
+```
+
