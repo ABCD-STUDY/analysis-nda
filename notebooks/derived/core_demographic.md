@@ -6,7 +6,7 @@ The following sections extend the nda17 data frame (see [creating a single data 
  - female
  - race.ethnicity
  - highest.household.income
- - highest.education
+ - high.educ
  - married
 
 Most of these are simple re-definitions of existing columns with simplier names, other columns are re-scored versions of nda17 columns.
@@ -56,56 +56,74 @@ highest.household.income[highest.household.income %in% c(NA, "999", "777")] = NA
 nda17$highest.household.income = factor(highest.household.income)
 ```
 
-### Highest level of parent education
+### Highest level of parental education
 
 ```r
 highest.education = rep("999", length(nda17$demo_prnt_ed_v2))
-m[0] = "##en##Never attended/Kindergarten only##/en####es##Nunca asistí/Kinder solamente##/es##"
-m[1] = "##en##1st grade##/en####es##1.er grado##/es##"
-m[2] = "##en##2nd grade##/en####es##2.º grado##/es##"
-m[3] = "##en##3rd grade##/en####es##3.er grado##/es##"
-m[4] = "##en##4th grade##/en####es##4.º grado##/es##"
-m[5] = "##en##5th grade##/en####es##5.º grado##/es##"
-m[6] = "##en##6th grade##/en####es##6.º grado##/es##"
-m[7] = "##en##7th grade##/en####es##7.º grado##/es##"
-m[8] = "##en##8th grade##/en####es##8.º grado##/es##"
-m[9] = "##en##9th grade##/en####es##9.º grado##/es##"
-m[10] = "##en##10th grade##/en####es##10.º grado##/es##"
-m[11] = "##en##11th grade##/en####es##11.º grado##/es##"
-m[12] = "##en##12th grade, no diploma##/en####es## 12.º grado, sin certificado/diploma##/es##"
-m[13] = "##en##High school graduate##/en####es##Preparatoria terminada##/es##"
-m[14] = "##en##GED or equivalent##/en####es##Diploma General de Equivalencia (GED) o equivalente##/es##"
-m[15] = "##en##Some college, no degree##/en####es##Estudios universitarios parciales; sin título##/es##"
-m[16] = "##en##Associate degree: Occupational, Technical, or Vocational##/en####es##Título de asociado: programa ocupacional, técnico o vocacional##/es##"
-m[17] = "##en##Associate degree: Academic Program##/en####es##Título de asociado: programa académico##/es##"
-m[18] = "##en##Bachelor's degree (ex. BA, AB, BS, BBS)##/en####es##Licenciatura (p. ej., BA, AB, BS, BBA)##/es##"
-m[19] = "##en##Master's degree (ex. MA, MS, MEng, MEd, MBA)##/en####es##Maestría (p. ej., MA, MS, MEng, MEd, MBA)##/es##"
-m[20] = "##en##Professional School degree (ex. MD, DDS, DVN, JD)##/en####es##Título de escuela profesional (p. ej., MD, DDS, DVM, JD)##/es##"
-m[21] = "##en##Doctoral degree (ex. PhD, EdD)##/en####es##Doctorado (p. ej., PhD, EdD)##/es##"
+m = list()
+m[1] = "##en##Never attended/Kindergarten only##/en####es##Nunca asistí/Kinder solamente##/es##"
+m[2] = "##en##1st grade##/en####es##1.er grado##/es##"
+m[3] = "##en##2nd grade##/en####es##2.º grado##/es##"
+m[4] = "##en##3rd grade##/en####es##3.er grado##/es##"
+m[5] = "##en##4th grade##/en####es##4.º grado##/es##"
+m[6] = "##en##5th grade##/en####es##5.º grado##/es##"
+m[7] = "##en##6th grade##/en####es##6.º grado##/es##"
+m[8] = "##en##7th grade##/en####es##7.º grado##/es##"
+m[9] = "##en##8th grade##/en####es##8.º grado##/es##"
+m[10] = "##en##9th grade##/en####es##9.º grado##/es##"
+m[11] = "##en##10th grade##/en####es##10.º grado##/es##"
+m[12] = "##en##11th grade##/en####es##11.º grado##/es##"
+m[13] = "##en##12th grade, no diploma##/en####es## 12.º grado, sin certificado/diploma##/es##"
+m[14] = "##en##High school graduate##/en####es##Preparatoria terminada##/es##"
+m[15] = "##en##GED or equivalent##/en####es##Diploma General de Equivalencia (GED) o equivalente##/es##"
+m[16] = "##en##Some college, no degree##/en####es##Estudios universitarios parciales; sin título##/es##"
+m[17] = "##en##Associate degree: Occupational, Technical, or Vocational##/en####es##Título de asociado: programa ocupacional, técnico o vocacional##/es##"
+m[18] = "##en##Associate degree: Academic Program##/en####es##Título de asociado: programa académico##/es##"
+m[19] = "##en##Bachelor's degree (ex. BA, AB, BS, BBS)##/en####es##Licenciatura (p. ej., BA, AB, BS, BBA)##/es##"
+m[20] = "##en##Master's degree (ex. MA, MS, MEng, MEd, MBA)##/en####es##Maestría (p. ej., MA, MS, MEng, MEd, MBA)##/es##"
+m[21] = "##en##Professional School degree (ex. MD, DDS, DVN, JD)##/en####es##Título de escuela profesional (p. ej., MD, DDS, DVM, JD)##/es##"
+m[22] = "##en##Doctoral degree (ex. PhD, EdD)##/en####es##Doctorado (p. ej., PhD, EdD)##/es##"
 m[77] = "##en##Refused to answer##/en####es##Prefiero no responder##/es##"
-highest.education[nda17$demo_prnt_ed_v2 == m[0]] = 1
-highest.education[nda17$demo_prnt_ed_v2 == m[1]] = 4
-highest.education[nda17$demo_prnt_ed_v2 == m[2]] = 5
-highest.education[nda17$demo_prnt_ed_v2 == m[3]] = 6
-highest.education[nda17$demo_prnt_ed_v2 == m[4]] = 7
-highest.education[nda17$demo_prnt_ed_v2 == m[5]] = 8
-highest.education[nda17$demo_prnt_ed_v2 == m[6]] = 9
-highest.education[nda17$demo_prnt_ed_v2 == m[7]] = 10
-highest.education[nda17$demo_prnt_ed_v2 == m[8]] = 11
-highest.education[nda17$demo_prnt_ed_v2 == m[9]] = 12
-highest.education[nda17$demo_prnt_ed_v2 == m[10]] = 13
-highest.education[nda17$demo_prnt_ed_v2 == m[11]] = 14
-highest.education[(nda17$demo_prnt_ed_v2 == m[12]) | (nda17$demo_prnt_ed_v2 == m[13])] = 16
-highest.education[nda17$demo_prnt_ed_v2 == m[14]] = 17
-highest.education[nda17$demo_prnt_ed_v2 == m[15]] = 18
-highest.education[(nda17$demo_prnt_ed_v2 == m[16]) | (nda17$demo_prnt_ed_v2 == m[17])] = 20
-highest.education[nda17$demo_prnt_ed_v2 == m[18]] = 21
-highest.education[nda17$demo_prnt_ed_v2 == m[19]] = 22
-highest.education[nda17$demo_prnt_ed_v2 == m[20]] = 23
-highest.education[nda17$demo_prnt_ed_v2 == m[21]] = 24
+highest.education[nda17$demo_prnt_ed_v2 == m[1]] = 1
+highest.education[nda17$demo_prnt_ed_v2 == m[2]] = 4
+highest.education[nda17$demo_prnt_ed_v2 == m[3]] = 5
+highest.education[nda17$demo_prnt_ed_v2 == m[4]] = 6
+highest.education[nda17$demo_prnt_ed_v2 == m[5]] = 7
+highest.education[nda17$demo_prnt_ed_v2 == m[6]] = 8
+highest.education[nda17$demo_prnt_ed_v2 == m[7]] = 9
+highest.education[nda17$demo_prnt_ed_v2 == m[8]] = 10
+highest.education[nda17$demo_prnt_ed_v2 == m[9]] = 11
+highest.education[nda17$demo_prnt_ed_v2 == m[10]] = 12
+highest.education[nda17$demo_prnt_ed_v2 == m[11]] = 13
+highest.education[nda17$demo_prnt_ed_v2 == m[12]] = 14
+highest.education[(nda17$demo_prnt_ed_v2 == m[13]) | (nda17$demo_prnt_ed_v2 == m[14])] = 16
+highest.education[nda17$demo_prnt_ed_v2 == m[15]] = 17
+highest.education[nda17$demo_prnt_ed_v2 == m[16]] = 18
+highest.education[(nda17$demo_prnt_ed_v2 == m[17]) | (nda17$demo_prnt_ed_v2 == m[18])] = 20
+highest.education[nda17$demo_prnt_ed_v2 == m[19]] = 21
+highest.education[nda17$demo_prnt_ed_v2 == m[20]] = 22
+highest.education[nda17$demo_prnt_ed_v2 == m[21]] = 23
+highest.education[nda17$demo_prnt_ed_v2 == m[22]] = 24
 highest.education[nda17$demo_prnt_ed_v2 == m[77]] = 999
 highest.education[highest.education == 999] = NA
 nda17$highest.education = factor(highest.education)
+```
+
+Here a simplified version of the highest education that results in only 5 different levels:
+```r
+high.educ = rep("999", length(nda17$demo_prnt_ed_v2))
+idx <- which(nda17$demo_prnt_ed_v2 %in% m[1:13],arr.ind = TRUE)
+high.educ[idx] = "<= 12 grades"
+idx <- which(nda17$demo_prnt_ed_v2 == m[14], arr.ind = TRUE)
+high.educ[idx] = "HS Degree"
+idx <- which(nda17$demo_prnt_ed_v2 %in% m[15:18], arr.ind = TRUE)
+high.educ[idx] = "College Degree"
+idx <- which(nda17$demo_prnt_ed_v2 == m[19], arr.ind = TRUE)
+high.educ[idx] = "Bachelor"
+idx <- which(nda17$demo_prnt_ed_v2 %in% m[20:22], arr.ind = TRUE)
+high.educ[idx] = "Higher"
+high.educ[which(high.educ == "999")]=NA
+nda17$high.educ <- factor(high.educ)
 ```
 
 ### Marrital status
