@@ -2,7 +2,7 @@
 
 For some ABCD participants there might be missing values in some core demographic variables that are used in many anlaysis. It is benefitial to impute these missing values to be able to use the available data points for these participants.
 
-We will assume that you have a single NDA-17 data frame (see [https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/derived/core_demographic.md](recode of core demographic variables)) and you that you have followed the steps in a) [https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/general/merge_data.md](merge individual spreadsheets), b) [https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/general/categorical_extension.md](recover categorical variables), and c) [https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/derived/core_demographic.md](recode some core demographic variables).
+We will assume that you have a single NDA-17 data frame (see [recode of core demographic variables](https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/derived/core_demographic.md)) and you that you have followed the steps in a) [merge individual spreadsheets](https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/general/merge_data.md), b) [recover categorical variables](https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/general/categorical_extension.md), and c) [recode some core demographic variables](https://github.com/ABCD-STUDY/analysis-nda17/blob/master/notebooks/derived/core_demographic.md).
 
 ```r
 if (!('data.table' %in% installed.packages()[,"Package"]))  install.packages('data.table')
