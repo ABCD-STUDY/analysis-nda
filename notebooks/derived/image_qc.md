@@ -30,6 +30,10 @@ Here an example that lists mean motion values for resting state and fMRI tasks:
 
 ```r
 idx = grep("mean_motion", names(nda17))
-summary(nda17[idx])
+for(i in 1:length(idx)) {
+   d = nda17[[idx[i]]]
+   print(paste("measure: ",names(nda17)[idx[i]]))
+   print(summary(as.numeric(as.character(d))))
+}
 ```
 
