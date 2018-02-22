@@ -26,10 +26,10 @@ print(paste("Yay: ", length(goodTask), " Nay: ", length(nda17$src_subject_id[!is
 
 ## Participant by resting state mean-motion
 
-Here an example that lists mean motion for resting state scans:
+Here an example that lists mean motion values for resting state and fMRI tasks:
 
 ```r
-motion = c("src_subject_id", "rsfm_mean_motion")
-head(nda17[motion])
+idx = grep("mean_motion", names(nda17))
+summary(nda17[idx])
 ```
 
