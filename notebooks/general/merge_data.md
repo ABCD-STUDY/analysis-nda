@@ -61,6 +61,25 @@ for (p in 1:length(tables)) {
 }
 ```
 
+Only for image data some columns duplicate across the different fMRI tasks. Merging these spreadsheets would create additional ".x" column names. Lets rename these columns to include the instrument name, which would make the names unique again.
+```r
+varlist = c("scanner_manufacturer_pd", "scanner_type_pd", "deviceserialnumber", "magnetic_field_strength", "procdate", "pipeline_version", "mid_beta_seg_dof", "fmri_beta_gparc_tr", "fmri_beta_gparc_numtrs", "fmri_beta_gparc_mean_motion", "rsfm_tr", "rsfm_nreps", "rsfm_numtrs", 
+"rsfm_mean_motion", "rsfm_max_motion", "rsfm_mean_trans", "rsfm_max_trans", "rsfm_mean_rot", "rsfm_max_rot", "respond", "dti_mean_motion",
+"dti_mean_trans", "dti_mean_rot")
+for (p in 1:length(tables)) {
+    dt = tables[[p]]
+    for (q in 1:length(varlist)) {
+        if (varlist[q] %in% names(dt)) {
+            newname = paste(sub(pattern = "(.*)\\..*$", replacement = "\\1", basename(input_list[p])), ".", varlist[q], sep="")
+            print(paste("change: ", varlist[q], p, " ", newname))
+            colnames(dt)[which(names(dt) == varlist[q])] = newname
+        }
+    }
+    tables[[p]] = dt
+}
+```
+
+
 To conserve memory lets remove any column that is empty. These columns might have been introduced because other projects use ABCD instruments or, in rare cases because data had to be sanitized before it was exported.
 ```r
 for (p in 1:length(tables)) {
