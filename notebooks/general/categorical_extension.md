@@ -51,6 +51,14 @@ for (i in 1:length(numbers)) {
 }
 ```
 
+After this step some variables are still wrongly encoded as text. Usually this is the case for values that are imported from external vendors. A mix of continuous values and text fields like comments might prevent an automatic conversion for these columns. If we assume that the text entries can be mapped to missing values we can convert more factor variables to numbers:
+```r
+cont = read.csv('continuous_coding_fix.csv')
+for (i in 1:length(cont$name)) {
+    nda17[[as.character(cont$name[i])]] = as.numeric(as.character(nda17[[as.character(cont$name[i])]]))
+}
+```
+
 We can save this new version of the ABCD data combined spreadsheet now:
 ```r
 saveRDS(nda17, "nda17.Rds")
