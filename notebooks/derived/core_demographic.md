@@ -109,19 +109,19 @@ highest.education[highest.education == 999] = NA
 nda17$highest.education = factor(highest.education)
 ```
 
-Here a simplified version of the highest education that results in only 5 different levels:
+Here a simplified version of the highest education that results in only 5 different levels. These levels correspond to the numbers published by the American Community Census (ACS). 
 ```r
 high.educ = rep("999", length(nda17$demo_prnt_ed_v2))
 idx <- which(nda17$demo_prnt_ed_v2 %in% m[1:13],arr.ind = TRUE)
-high.educ[idx] = "<= 12 grades"
-idx <- which(nda17$demo_prnt_ed_v2 == m[14], arr.ind = TRUE)
-high.educ[idx] = "HS Degree"
-idx <- which(nda17$demo_prnt_ed_v2 %in% m[15:18], arr.ind = TRUE)
-high.educ[idx] = "College Degree"
+high.educ[idx] = "< HS Diploma"
+idx <- which(nda17$demo_prnt_ed_v2 %in% m[14:15], arr.ind = TRUE)
+high.educ[idx] = "HS Diploma/GED"
+idx <- which(nda17$demo_prnt_ed_v2 %in% m[16:18], arr.ind = TRUE)
+high.educ[idx] = "Some College"
 idx <- which(nda17$demo_prnt_ed_v2 == m[19], arr.ind = TRUE)
 high.educ[idx] = "Bachelor"
 idx <- which(nda17$demo_prnt_ed_v2 %in% m[20:22], arr.ind = TRUE)
-high.educ[idx] = "Higher"
+high.educ[idx] = "Post Graduate Degree"
 high.educ[which(high.educ == "999")]=NA
 nda17$high.educ <- factor(high.educ)
 ```
