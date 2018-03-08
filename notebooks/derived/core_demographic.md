@@ -5,7 +5,7 @@ The following sections extend the nda17 data frame (see [creating a single data 
  - age in years
  - female
  - race.ethnicity
- - highest.household.income
+ - household.income
  - high.educ
  - married
 
@@ -36,24 +36,24 @@ nda17$age = nda17$interview_age
 nda17$female = factor(as.numeric(nda17$gender == "F"), levels = 0:1, labels = c("no", "yes") ) 
 ```
 
-### Highest household income
+### Household income
 
 ```r
-highest.household.income = as.character(nda17$demo_comb_income_v2)
-highest.household.income[nda17$demo_comb_income_v2 == "##en##Less than $5,000##/en####es##Menos de $5,000##/es##"] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$5,000 through $11,999##/en####es##De $5,000 a $11,999##/es##"] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$12,000 through $15,999##/en####es##De $12,000 a $15,999##/es##"] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$16,000 through $24,999##/en####es##De $16,000 a $24,999##/es##"] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$25,000 through $34,999##/en####es##De $25,000 a $34,999##/es##"] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$35,000 through $49,999##/en####es##De $35,000 a $49,999##/es##"] = "[<50K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$50,000 through $74,999##/en####es##De $50,000 a $74,999##/es##"] = "[>=50K & <100K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$75,000 through $99,999##/en####es##De $75,000 a $99,999##/es##"] = "[>=50K & <100K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$100,000 through $199,999##/en####es##De $100,000 a $199,999##/es##"] = "[>=100K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##$200,000 and greater##/en####es##$200,000 o más##/es##"] = "[>=100K]"
-highest.household.income[nda17$demo_comb_income_v2 == "##en##Refuse to answer##/en####es##No deseo responder##/es##"] = NA
-highest.household.income[nda17$demo_comb_income_v2 == "##en##Don't know##/en####es##No lo sé##/es##"] = NA
-highest.household.income[highest.household.income %in% c(NA, "999", "777")] = NA
-nda17$highest.household.income = factor(highest.household.income)
+household.income = as.character(nda17$demo_comb_income_v2)
+household.income[nda17$demo_comb_income_v2 == "##en##Less than $5,000##/en####es##Menos de $5,000##/es##"] = "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$5,000 through $11,999##/en####es##De $5,000 a $11,999##/es##"] = "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$12,000 through $15,999##/en####es##De $12,000 a $15,999##/es##"] = "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$16,000 through $24,999##/en####es##De $16,000 a $24,999##/es##"] = "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$25,000 through $34,999##/en####es##De $25,000 a $34,999##/es##"] = "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$35,000 through $49,999##/en####es##De $35,000 a $49,999##/es##"] = "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$50,000 through $74,999##/en####es##De $50,000 a $74,999##/es##"] = "[>=50K & <100K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$75,000 through $99,999##/en####es##De $75,000 a $99,999##/es##"] = "[>=50K & <100K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$100,000 through $199,999##/en####es##De $100,000 a $199,999##/es##"] = "[>=100K]"
+household.income[nda17$demo_comb_income_v2 == "##en##$200,000 and greater##/en####es##$200,000 o más##/es##"] = "[>=100K]"
+household.income[nda17$demo_comb_income_v2 == "##en##Refuse to answer##/en####es##No deseo responder##/es##"] = NA
+household.income[nda17$demo_comb_income_v2 == "##en##Don't know##/en####es##No lo sé##/es##"] = NA
+household.income[highest.household.income %in% c(NA, "999", "777")] = NA
+nda17$household.income = factor(household.income)
 ```
 
 ### Highest level of parental education
