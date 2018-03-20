@@ -18,16 +18,22 @@ input_list = input_list[-grep("package_info.txt",input_list)]
 input_list = input_list[-grep("fmriresults01.txt",input_list)]
 ```
 
-Read each of the tables into memory. This loop will run for a several minutes and requires close to 8GB of main memory.
+Read each of the tables into memory. This loop will run for several minutes and requires close to 8GB of main memory. While reading the files the alias_mapping spreadsheet is used to replace Element Names from nda with the corresponding alias names (alias column in NDA data dictionaries). This improves the consistency and readability of the column names.
 
 ```r
+alia = read.csv('alias_mapping.csv')
 tables = list()
 for (p in 1:length(input_list)) {
     input = input_list[p]
     print(paste("import: ", input, " [", p, "/",length(input_list), "]", sep=""))
 
-    # read data as tab-separated table
+    # read data from tab-separated table as characters
     dt = read.table(file = input, sep = '\t',header = TRUE)
+
+    # replace variable names from nda with their alias names to make them more like ABCD
+    instrument = sub('\\.txt$', '', basename(input_list[p]))
+    ali = alia[which(alia$instrument == instrument),]
+    names(dt)[which(names(dt) %in% ali$nda)] = as.character(ali$abcd)
 
     tables[[p]] = dt
 }
@@ -84,7 +90,7 @@ To conserve memory lets remove any column that is empty. These columns might hav
 ```r
 for (p in 1:length(tables)) {
     dt = tables[[p]]
-    dt = dt[!sapply(dt, function(x) all(x==""))]
+    dt = dt[!sapply(dt, function(x) all((x=="")|(x=="NA")))]
     tables[[p]] = dt
 }
 ```

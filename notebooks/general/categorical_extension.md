@@ -51,12 +51,61 @@ for (i in 1:length(numbers)) {
 }
 ```
 
-After this step some variables are still wrongly encoded as text. Usually this is the case for values that are imported from external vendors. A mix of continuous values and text fields like comments might prevent an automatic conversion for these columns. If we assume that the text entries can be mapped to missing values we can convert more factor variables to numbers:
+If we ignore knows categorical variables we can try to convert all other variables to numeric variables if their levels are numerical:
+
 ```r
-cont = read.csv('continuous_coding_fix.csv')
-for (i in 1:length(cont$name)) {
-    nda17[[as.character(cont$name[i])]] = as.numeric(as.character(nda17[[as.character(cont$name[i])]]))
+ncols = ncol(nda17)
+colnames = names(nda17)
+data_clean = nda17
+typevec = NA
+nlevvec = rep(NA,length(typevec))
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol | is.na(x)
+for (coli in 3:ncols) {
+  levvec = levels(as.factor(as.character(nda17[,coli])))
+  nlev = length(levvec)
+  levvec.numeric = suppressWarnings(as.numeric(levvec))
+  nnum = sum((!is.na(levvec.numeric))|(levvec=="")|(levvec=="NA")) 
+  nempty = sum(levvec==""|(levvec=="NA"))
+  nlevvec[coli] = nlev
+  if (names(nda17)[coli] %in% categories$name) {
+      typevec[coli] = 'Categorical'
+  } else if (nnum==nlev) { # All numeric
+    data_clean[,coli] = as.numeric(as.character(nda17[,coli]))
+    nint = sum(is.wholenumber(levvec.numeric))
+    if (nint==nlev) {
+      typevec[coli] = 'Integer'
+    } else {
+      typevec[coli] = 'Real'
+    }
+  } else if ((nnum-nempty)==0) { # No numeric, other than empty string
+    if (nlev==2) {
+      typevec[coli] = 'Binary'
+    } else {
+      typevec[coli] = 'Categorical'
+    }
+  } else {
+    typevec[coli] = 'Ambiguous' # Inspect more closely
+  }
+  cat(sprintf('%5d: type=%s nlev=%d (%s)\n',coli,typevec[coli],nlevvec[coli],colnames[coli]))
 }
+nda17 = data_clean
+# Ambiguius columns
+#colnames[typevec=='Ambiguous']
+
+# Empty columns
+#colnames[(typevec=='Integer')&(nlevvec==0)]
+
+# All-zero columns
+#colnames[(typevec=='Integer')&(nlevvec==1)]
+#which((typevec=='Integer')&(nlevvec==1))
+```
+
+The following is not needed anymore: After this step some variables are still wrongly encoded as text. Usually this is the case for values that are imported from external vendors. A mix of continuous values and text fields like comments might prevent an automatic conversion for these columns. If we assume that the text entries can be mapped to missing values we can convert more factor variables to numbers:
+```r
+#cont = read.csv('continuous_coding_fix.csv')
+#for (i in 1:length(cont$name)) {
+#    nda17[[as.character(cont$name[i])]] = as.numeric(as.character(nda17[[as.character(cont$name[i])]]))
+#}
 ```
 
 We can save this new version of the ABCD data combined spreadsheet now:

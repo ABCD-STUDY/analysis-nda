@@ -52,7 +52,7 @@ household.income[nda17$demo_comb_income_v2 == "##en##$100,000 through $199,999##
 household.income[nda17$demo_comb_income_v2 == "##en##$200,000 and greater##/en####es##$200,000 o más##/es##"] = "[>=100K]"
 household.income[nda17$demo_comb_income_v2 == "##en##Refuse to answer##/en####es##No deseo responder##/es##"] = NA
 household.income[nda17$demo_comb_income_v2 == "##en##Don't know##/en####es##No lo sé##/es##"] = NA
-household.income[highest.household.income %in% c(NA, "999", "777")] = NA
+household.income[household.income %in% c(NA, "999", "777")] = NA
 nda17$household.income = factor(household.income)
 ```
 
@@ -134,6 +134,12 @@ married[as.numeric(nda17$demo_prnt_marital_v2) == 1] = 1
 nda17$married = factor( married, levels= 0:1, labels = c("no", "yes") )
 ```
 
+### Body-Mass index
+
+```r
+nda17$BMI = nda17$anthro_weight_calc / nda17$anthro_height_calc^2 * 703
+```
+
 ### A simplified race.ethnicity value
 
 ABCD is using a simplified 5 category race/ethnicity scale for reporting purposes and for comparison of the ABCD cohort to data from the American Community Census. The following code will add a new 'race_ethnicity' column to the NDA-17 data frame that implement this scale.
@@ -141,24 +147,24 @@ ABCD is using a simplified 5 category race/ethnicity scale for reporting purpose
 ```r
 isWhite = rep("999", length(nda17$demo_ethn_v2))
 col = nda17$demo_ethn_v2
-idx = which( (nda17$demo_ethn_v2 == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") | (nda17$demo_ethn_v2 == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>"))
+idx = which( (nda17$demo_ethn_v2 == "Yes") | (nda17$demo_ethn_v2 == "No"))
 isWhite[idx] = col[idx]
-isWhite[which(col != "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>" & nda17$demo_race_a_p___10 == "1")] = TRUE
-isWhite[-which(col != "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>" & nda17$demo_race_a_p___10 == "1")] = FALSE
+isWhite[which(col != "Yes" & nda17$demo_race_a_p___10 == "1")] = TRUE
+isWhite[-which(col != "Yes" & nda17$demo_race_a_p___10 == "1")] = FALSE
 
 isBlack = rep("999", length(nda17$demo_ethn_v2))
 col = nda17$demo_ethn_v2
-idx = which( (nda17$demo_ethn_v2 == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") | (nda17$demo_ethn_v2 == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>"))
+idx = which( (nda17$demo_ethn_v2 == "Yes") | (nda17$demo_ethn_v2 == "No"))
 isBlack[idx] = col[idx]
-isBlack[which(isBlack != "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>" & nda17$demo_race_a_p___11 == "1")] = TRUE
-isBlack[-which(isBlack != "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>" & nda17$demo_race_a_p___11 == "1")] = FALSE
+isBlack[which(isBlack != "Yes" & nda17$demo_race_a_p___11 == "1")] = TRUE
+isBlack[-which(isBlack != "Yes" & nda17$demo_race_a_p___11 == "1")] = FALSE
 
 isHispa = rep("999", length(nda17$demo_ethn_v2))
 col = nda17$demo_ethn_v2
-idx = which((col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") | (col == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>"))
+idx = which((col == "Yes") | (col == "No"))
 isHispa[idx] = col[idx]
-isHispa[which(col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>")] = TRUE
-isHispa[-which(col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>")] = FALSE
+isHispa[which(col == "Yes")] = TRUE
+isHispa[-which(col == "Yes")] = FALSE
 ```
 
 It is worthwhile to point out here that the above category for hispanic is calculated in ABCD differently from the other race categories. In particular any ethnicity selection of hispanic will map the participant into the hispanic category regardless of the selection of one or more race categories.
@@ -166,7 +172,7 @@ It is worthwhile to point out here that the above category for hispanic is calcu
 ```r
 isAsian = rep("999", length(nda17$demo_ethn_v2))
 col = nda17$demo_ethn_v2
-idx = which((col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") | (col == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>"))
+idx = which((col == "Yes") | (col == "No"))
 isAsian[idx] = col[idx]
 idx = which((nda17$demo_race_a_p___18 == "1") | (nda17$demo_race_a_p___19 == "1") | (nda17$demo_race_a_p___20 == "1") | (nda17$demo_race_a_p___21 == "1") | (nda17$demo_race_a_p___22 == "1") | (nda17$demo_race_a_p___23 == "1") | (nda17$demo_race_a_p___24 == "1"))
 isAsian[idx] = TRUE
@@ -174,7 +180,7 @@ isAsian[-idx] = FALSE
 
 isOther = rep("999", length(nda17$demo_ethn_v2))
 col = nda17$demo_ethn_v2
-idx = which((col == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") | (col == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>"))
+idx = which((col == "Yes") | (col == "No"))
 isOther[idx] = col[idx]
 idx = which((nda17$demo_race_a_p___12 == "1") | (nda17$demo_race_a_p___13 == "1") | (nda17$demo_race_a_p___14 == "1") | (nda17$demo_race_a_p___15 == "1") | (nda17$demo_race_a_p___16 == "1") | (nda17$demo_race_a_p___17 == "1") | (nda17$demo_race_a_p___25 == "1") | (nda17$demo_race_a_p___77 == "1") | (nda17$demo_race_a_p___99 == "1"))
 isOther[idx] = TRUE
@@ -189,11 +195,11 @@ for( i in 1:length(race.ethnicity)) {
         as.numeric(isOther[i]==TRUE) >= 2) {
 
       ethnicity_recode = "999"
-      if ( (nda17$demo_ethn_v2[i] == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") || (nda17$demo_ethn_v2[i] == "<span lang=\"en\">No</span><span lang=\"es\" style= \"color:maroon\">No</span>") ) {
+      if ( (nda17$demo_ethn_v2[i] == "Yes") || (nda17$demo_ethn_v2[i] == "No") ) {
          ethnicity_recode = nda17$demo_ethn_v2[i]
       }
       # even if you are mixed race or other, selecting hispanic ethnicity assigns the participant to the hispanic category
-      if (ethnicity_recode == "<span lang=\"en\">Yes</span><span lang=\"es\" style= \"color:maroon\">Sí</span>") {
+      if (ethnicity_recode == "Yes") {
          race.ethnicity[i] = 3
       } else {
          race.ethnicity[i] = 5
