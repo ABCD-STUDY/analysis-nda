@@ -33,7 +33,14 @@ for (p in 1:length(input_list)) {
     # replace variable names from nda with their alias names to make them more like ABCD
     instrument = sub('\\.txt$', '', basename(input_list[p]))
     ali = alia[which(alia$instrument == instrument),]
-    names(dt)[which(names(dt) %in% ali$nda)] = as.character(ali$abcd)
+    nn = names(dt)
+    for (q in 1:length(nn)) {
+        if (nn[q] %in% ali$nda) {
+             nn[q] = as.character(ali$abcd[ali$nda == nn[q]])
+        }
+    }
+    names(dt) = nn
+    # names(dt)[which(names(dt) %in% ali$nda)] = as.character(ali$abcd)
 
     tables[[p]] = dt
 }
@@ -183,12 +190,12 @@ nda17 = t2[[1]]
 The nda17 data frame should contain 4,524 rows and about 38,000 columns. As a last step we can save the data in R's native file format (780MB).
 
 ```r
-saveRDS(nda17, "nda17.Rds")
+saveRDS(nda17, "nda17_orig.Rds")
 ```
 
 In order to read the data back into memory (5.5GB) use:
 ```r
-nda17 = readRDS("nda17.Rds")
+nda17 = readRDS("nda17_orig.Rds")
 ```
 
 ### Notes
