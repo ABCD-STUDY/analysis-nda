@@ -137,7 +137,7 @@ nda17$married = factor( married, levels= 0:1, labels = c("no", "yes") )
 ### Body-Mass index
 
 ```r
-nda17$BMI = nda17$anthro_weight_calc / nda17$anthro_height_calc^2 * 703
+nda17$anthro_bmi_calc = nda17$anthro_weight_calc / nda17$anthro_height_calc^2 * 703
 ```
 
 ### A simplified race.ethnicity value

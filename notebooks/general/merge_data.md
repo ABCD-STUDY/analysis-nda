@@ -36,11 +36,9 @@ for (p in 1:length(input_list)) {
     nn = names(dt)
     for (q in 1:length(nn)) {
         if (nn[q] %in% ali$nda) {
-             nn[q] = as.character(ali$abcd[ali$nda == nn[q]])
+            colnames(dt)[q] <- as.character(ali$abcd[ali$nda == nn[q]])
         }
     }
-    names(dt) = nn
-    # names(dt)[which(names(dt) %in% ali$nda)] = as.character(ali$abcd)
 
     tables[[p]] = dt
 }
