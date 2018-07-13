@@ -39,16 +39,22 @@ if (!('jsonlite' %in% installed.packages()[,"Package"]))  install.packages('json
 library(jsonlite)
 abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD")
 numbers = list()
+pb <- txtProgressBar(min = 0, max = length(abcd_instruments$shortName), initial=NA, style = 3)
 for ( i in 1:length(abcd_instruments$shortName)) {
+    setTxtProgressBar(pb, i)
     inst_name = abcd_instruments$shortName[i]
     inst <- fromJSON(paste("https://ndar.nih.gov/api/datadictionary/v2/datastructure/", inst_name, sep=""))
     numbers = append(numbers, inst$dataElements[inst$dataElements$type %in% c("Integer","Float"),]$name)
 }
+close(pb)
 # remove known categorical variables
 numbers = numbers[!(numbers %in% categories$name)]
+pb <- txtProgressBar(min = 0, max = length(numbers), initial=NA, style = 3)
 for (i in 1:length(numbers)) {
+    setTxtProgressBar(pb, i)
     nda17[unlist(numbers[i])] = as.numeric(as.character(nda17[[unlist(numbers[i])]]))
 }
+close(pb)
 ```
 
 If we ignore knows categorical variables we can try to convert all other variables to numeric variables if their levels are numerical:
