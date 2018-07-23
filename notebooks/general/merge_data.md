@@ -2,7 +2,7 @@
 
 Starting from the official download package "ABCD-RELEASE-1" the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless the code below is provided to illustrate some of the perculiarities of the data.
 
-We will assume that you downloaded the spreadsheets data (3.2GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
+We will assume that you downloaded the spreadsheet data (3.2GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
 script.dir <- "~/src/analysis-nda17/notebooks/general"
@@ -13,26 +13,52 @@ input_list = Sys.glob(paths = c(paste(script.dir,"/../../data/*.txt",sep="")))
 Remove all files that are not required for this merge. This includes files that are related to the download process as well as files that reference the raw data sharing (Fast-Track).
 
 ```r
-input_list = input_list[-grep("md5_values.txt",input_list)]
-input_list = input_list[-grep("package_info.txt",input_list)]
-input_list = input_list[-grep("fmriresults01.txt",input_list)]
+if (length(grep("md5_values.txt",input_list)) > 0) input_list = input_list[-grep("md5_values.txt",input_list)]
+if (length(grep("package_info.txt",input_list)) > 0) input_list = input_list[-grep("package_info.txt",input_list)]
+if (length(grep("fmriresults01.txt",input_list)) > 0) input_list = input_list[-grep("fmriresults01.txt",input_list)]
+if (length(grep("image03.txt",input_list)) > 0) input_list = input_list[-grep("image03.txt",input_list)]
 ```
 
 Read each of the tables into memory. This loop will run for several minutes and requires close to 8GB of main memory. While reading the files the alias_mapping spreadsheet is used to replace Element Names from nda with the corresponding alias names (alias column in NDA data dictionaries). This improves the consistency and readability of the column names.
 
 ```r
-alia = read.csv('alias_mapping.csv')
+alia  = read.csv('alias_mapping.csv')
+alia2 = read.csv('freesvol_mapping_file_newnames.csv')
+alia3 = read.csv('dmri_mapping_file_newnames.csv')
+alia4 = read.csv('tfmri_mapping_file_newnames.csv')
 tables = list()
 for (p in 1:length(input_list)) {
+    print(p)
     input = input_list[p]
     print(paste("import: ", input, " [", p, "/",length(input_list), "]", sep=""))
 
-    # read data from tab-separated table as characters
+    # read data from the tab-separated files as characters
     dt = read.table(file = input, sep = '\t',header = TRUE)
 
     # replace variable names from nda with their alias names to make them more like ABCD
     instrument = sub('\\.txt$', '', basename(input_list[p]))
-    ali = alia[which(alia$instrument == instrument),]
+    ali  = alia[which(alia$instrument == instrument),]
+    ali2 = alia2[which(alia2$instrument == instrument),]
+    ali3 = alia3[which(alia3$instrument == instrument),]
+    ali4 = alia4[which(alia4$instrument == instrument),]
+    nn = names(dt)
+    for (q in 1:length(nn)) {
+        if (nn[q] %in% ali4$nda) {
+            colnames(dt)[q] <- as.character(ali4$abcd[ali4$nda == nn[q]])
+        }
+    }
+    nn = names(dt)
+    for (q in 1:length(nn)) {
+        if (nn[q] %in% ali3$nda) {
+            colnames(dt)[q] <- as.character(ali3$abcd[ali3$nda == nn[q]])
+        }
+    }
+    nn = names(dt)
+    for (q in 1:length(nn)) {
+        if (nn[q] %in% ali2$nda) {
+            colnames(dt)[q] <- as.character(ali2$abcd[ali2$nda == nn[q]])
+        }
+    }
     nn = names(dt)
     for (q in 1:length(nn)) {
         if (nn[q] %in% ali$nda) {
@@ -54,7 +80,7 @@ for (p in 1:length(tables)) {
 }
 ```
 
-Only keep the last submission's data. This section can be removed as soon as the download ABCD-RELEASE-1 has been corrected.
+Only keep the last submission's data. This section can be removed as soon as the download ABCD-RELEASE-1 has been corrected (seems to be the case now).
 ```r
 for (p in 1:length(tables)) {
     dt = tables[[p]]
@@ -67,7 +93,8 @@ Image data could use more than one run, lets focus on the average data and remov
 ```r
 for (p in 1:length(tables)) {
     dt = tables[[p]]
-    if ("lmt_run" %in% names(dt) && "AVERAGE" %in% levels(dt$lmt_run)) dt = dt[dt$lmt_run == "AVERAGE",]
+    run=grep("lmt_run", names(dt))
+    if (length(run) == 1 && "AVERAGE" %in% levels(dt[[run[1]]])) dt = dt[dt[[run[1]]] == "AVERAGE",]
     tables[[p]] = dt
 }
 ```
@@ -154,6 +181,20 @@ for (p in 1:length(tables)) {
     tables[[p]] = dt
 }
 ```
+
+We can add one more column to the data. This column is not yet part of the NDA data download but can be calculated from the DICOM data that are part of the ABCD Fast-Track data release. The column is used to indentify the device serial number of the scanner.
+```r
+devinfo = read.csv('../../data/DeviceSerialNumber.csv')
+devinfo = devinfo[,c("src_subject_id", "DeviceSerialNumber")]
+devinfo = devinfo[!duplicated(devinfo$src_subject_id),]
+for (p in 1:length(input_list)) {
+  dt = tables[[p]]
+  if (length(grep("abcd_ant01.txt",input_list[[p]])) == 1) {
+     tables[[p]] = merge(tables[[p]], devinfo, by.x="src_subject_id", by.y="src_subject_id", all.x=T, all.y=F)
+  } 
+}
+```
+
 
 As a final step, re-calculate the levels in each table. Information that has been removed in previous steps could have changed the factor information in each table.
 ```r
