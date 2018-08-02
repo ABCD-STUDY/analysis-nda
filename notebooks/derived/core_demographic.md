@@ -36,6 +36,12 @@ nda17$age = nda17$interview_age
 nda17$female = factor(as.numeric(nda17$gender == "F"), levels = 0:1, labels = c("no", "yes") ) 
 ```
 
+On NDA the "gender" variable is listed as containing "Sex at birth". Lets create a copy called "sex".
+```
+nda17$sex = nda17$gender
+```
+
+
 ### Household income
 
 ```r
