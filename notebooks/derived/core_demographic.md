@@ -118,15 +118,15 @@ high.educ2[which(high.educ2 == "999")] = NA
 high.educ1[which(high.educ1 == "777")] = NA
 high.educ2[which(high.educ2 == "777")] = NA
 high.educ = pmax(as.numeric(as.character(high.educ1)), as.numeric(as.character(high.educ2)), na.rm=T)
-idx <- which(nda17$demo_prnt_ed_v2 %in% 0:12, arr.ind = TRUE)
+idx <- which(high.educ %in% 0:12, arr.ind = TRUE)
 high.educ[idx] = "< HS Diploma"
-idx <- which(nda17$demo_prnt_ed_v2 %in% 13:14, arr.ind = TRUE)
+idx <- which(high.educ %in% 13:14, arr.ind = TRUE)
 high.educ[idx] = "HS Diploma/GED"
-idx <- which(nda17$demo_prnt_ed_v2 %in% 15:17, arr.ind = TRUE)
+idx <- which(high.educ %in% 15:17, arr.ind = TRUE)
 high.educ[idx] = "Some College"
-idx <- which(nda17$demo_prnt_ed_v2 == 18, arr.ind = TRUE)
+idx <- which(high.educ == 18, arr.ind = TRUE)
 high.educ[idx] = "Bachelor"
-idx <- which(nda17$demo_prnt_ed_v2 %in% 19:21, arr.ind = TRUE)
+idx <- which(high.educ %in% 19:21, arr.ind = TRUE)
 high.educ[idx] = "Post Graduate Degree"
 high.educ[which(high.educ == "999")]=NA
 high.educ[which(high.educ == "777")]=NA
@@ -140,6 +140,13 @@ married = rep("0", length(nda17$demo_prnt_marital_v2))
 married[as.numeric(nda17$demo_prnt_marital_v2) == 1] = 1
 nda17$married = factor( married, levels= 0:1, labels = c("no", "yes") )
 ```
+Add another variable that also includes couples that just live together. 
+```r
+married.livingtogether = rep("0", length(nda17$demo_prnt_marital_v2))
+married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 1 || as.numeric(nda17$demo_prnt_marital_v2) == 6] = 1
+nda17$married.livingtogether = factor( married.livingtogether, levels= 0:1, labels = c("no", "yes") )
+```
+
 
 ### Body-Mass index
 
