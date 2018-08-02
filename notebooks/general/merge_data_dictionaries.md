@@ -12,7 +12,7 @@ We start by pulling the list of all ABCD instruments from NDA:
 ```r
 library(jsonlite)
 
-abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD")
+abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD%20Release%201.0")
 # print the list
 abcd_instruments$shortName
 ```
