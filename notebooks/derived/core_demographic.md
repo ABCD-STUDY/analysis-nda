@@ -149,7 +149,7 @@ nda17$married = factor( married, levels= 0:1, labels = c("no", "yes") )
 Add another variable that also includes couples that just live together. 
 ```r
 married.livingtogether = rep("0", length(nda17$demo_prnt_marital_v2))
-married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 1 || as.numeric(nda17$demo_prnt_marital_v2) == 6] = 1
+married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 1 | as.numeric(nda17$demo_prnt_marital_v2) == 6] = 1
 nda17$married.livingtogether = factor( married.livingtogether, levels= 0:1, labels = c("no", "yes") )
 ```
 
@@ -157,7 +157,7 @@ nda17$married.livingtogether = factor( married.livingtogether, levels= 0:1, labe
 ### Body-Mass index
 
 ```r
-nda17$anthro_bmi_calc = nda17$anthro_weight_calc / nda17$anthro_height_calc^2 * 703
+nda17$anthro_bmi_calc = as.numeric(as.character(nda17$anthro_weight_calc)) / as.numeric(as.character(nda17$anthro_height_calc))^2 * 703
 ```
 
 ### A simplified race.ethnicity value
