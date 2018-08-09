@@ -144,12 +144,14 @@ nda17$high.educ <- factor(high.educ)
 ```r
 married = rep("0", length(nda17$demo_prnt_marital_v2))
 married[as.numeric(nda17$demo_prnt_marital_v2) == 1] = 1
+married[as.numeric(nda17$demo_prnt_marital_v2) == 7] = NA
 nda17$married = factor( married, levels= 0:1, labels = c("no", "yes") )
 ```
 Add another variable that also includes couples that just live together. 
 ```r
 married.livingtogether = rep("0", length(nda17$demo_prnt_marital_v2))
 married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 1 | as.numeric(nda17$demo_prnt_marital_v2) == 6] = 1
+married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 7] = NA
 nda17$married.livingtogether = factor( married.livingtogether, levels= 0:1, labels = c("no", "yes") )
 ```
 
@@ -165,91 +167,50 @@ nda17$anthro_bmi_calc = as.numeric(as.character(nda17$anthro_weight_calc)) / as.
 ABCD is using a simplified 5 category race/ethnicity scale for reporting purposes and for comparison of the ABCD cohort to data from the American Community Census. The following code will add a new 'race_ethnicity' column to the NDA-17 data frame that implement this scale.
 
 ```r
-isWhite = rep("999", length(nda17$demo_ethn_v2))
-col = nda17$demo_ethn_v2
-idx = which( (nda17$demo_ethn_v2 == 1) | (nda17$demo_ethn_v2 == 2))
-isWhite[idx] = col[idx]
-isWhite[which(col != 1 & nda17$demo_race_a_p___10 == "1")] = TRUE
-isWhite[-which(col != 1 & nda17$demo_race_a_p___10 == "1")] = FALSE
+nda17$demo_race_white= (nda17$demo_race_a_p___10 == 1)*1
+nda17$demo_race_black= (nda17$demo_race_a_p___11 == 1)*1
+nda17$demo_race_asian = 0
+nda17$demo_race_asian[nda17$demo_race_a_p___18 == 1 | nda17$demo_race_a_p___19 == 1 | 
+			nda17$demo_race_a_p___20 == 1 | nda17$demo_race_a_p___21 == 1 | 
+			nda17$demo_race_a_p___22 == 1 | nda17$demo_race_a_p___23 == 1 |
+		    nda17$demo_race_a_p___24==1] = 1
+nda17$demo_race_aian = 0
+nda17$demo_race_aian[nda17$demo_race_a_p___12 == 1 | nda17$demo_race_a_p___13 == 1] = 1
+nda17$demo_race_nhpi = 0
+nda17$demo_race_nhpi[nda17$demo_race_a_p___14 == 1 | nda17$demo_race_a_p___15 == 1 | 
+				nda17$demo_race_a_p___16 == 1 | nda17$demo_race_a_p___17 == 1] = 1
+nda17$demo_race_other = 0
+nda17$demo_race_other[nda17$demo_race_a_p___25 == 1] = 1
+nda17$demo_race_mixed = nda17$demo_race_white + nda17$demo_race_black + nda17$demo_race_asian + 
+					nda17$demo_race_aian + nda17$demo_race_nhpi + nda17$demo_race_other
 
-isBlack = rep("999", length(nda17$demo_ethn_v2))
-col = nda17$demo_ethn_v2
-idx = which( (nda17$demo_ethn_v2 == 1) | (nda17$demo_ethn_v2 == 2))
-isBlack[idx] = col[idx]
-isBlack[which(isBlack != 1 & nda17$demo_race_a_p___11 == "1")] = TRUE
-isBlack[-which(isBlack != 1 & nda17$demo_race_a_p___11 == "1")] = FALSE
+nda17$demo_race_mixed[ nda17$demo_race_mixed <= 1] =  0
+nda17$demo_race_mixed[ nda17$demo_race_mixed > 1] =  1
 
-isHispa = rep("999", length(nda17$demo_ethn_v2))
-col = nda17$demo_ethn_v2
-idx = which((col == 1) | (col == 2))
-isHispa[idx] = col[idx]
-isHispa[which(col == 1)] = TRUE
-isHispa[-which(col == 1)] = FALSE
+nda17$race.eth = NA
+nda17$race.eth[ nda17$demo_race_white == 1] = 2
+nda17$race.eth[ nda17$demo_race_black == 1] = 3
+nda17$race.eth[ nda17$demo_race_asian == 1] = 4
+nda17$race.eth[ nda17$demo_race_aian == 1]  = 5
+nda17$race.eth[ nda17$demo_race_nhpi == 1]  = 6
+nda17$race.eth[ nda17$demo_race_other == 1] = 7
+nda17$race.eth[ nda17$demo_race_mixed == 1] = 8
+
+nda17$race.eth[nda17$demo_ethn_v2 == "Yes"] = 1   
+
+nda17$race.eth <- factor(nda17$race.eth,
+                       levels = 1:8,
+                       labels = c("Hispanic", "White", "Black", "Asian", "AIAN", "NHPI", "Other", "Mixed") ) 
+```
+The above race.eth value has more categories compared to what has been used recently in ABCD. Here is the reduced definition of race/ethnicity used most frequently
+```r
+nda17$race.ethnicity = nda17$race.eth
+nda17$race.ethnicity[!(nda17$race.eth=="White" | nda17$race.eth=="Black" |
+					nda17$race.eth=="Asian" | nda17$race.eth=="Hispanic")] = "Other"
+nda17$race.ethnicity = droplevels(nda17$race.ethnicity)
 ```
 
 It is worthwhile to point out here that the above category for hispanic is calculated in ABCD differently from the other race categories. In particular any ethnicity selection of hispanic will map the participant into the hispanic category regardless of the selection of one or more race categories.
-
-```r
-isAsian = rep("999", length(nda17$demo_ethn_v2))
-col = nda17$demo_ethn_v2
-idx = which((col == 1) | (col == 2))
-isAsian[idx] = col[idx]
-idx = which((nda17$demo_race_a_p___18 == "1") | (nda17$demo_race_a_p___19 == "1") | (nda17$demo_race_a_p___20 == "1") | (nda17$demo_race_a_p___21 == "1") | (nda17$demo_race_a_p___22 == "1") | (nda17$demo_race_a_p___23 == "1") | (nda17$demo_race_a_p___24 == "1"))
-isAsian[idx] = TRUE
-isAsian[-idx] = FALSE
-
-isOther = rep("999", length(nda17$demo_ethn_v2))
-col = nda17$demo_ethn_v2
-idx = which((col == 1) | (col == 2))
-isOther[idx] = col[idx]
-idx = which((nda17$demo_race_a_p___12 == "1") | (nda17$demo_race_a_p___13 == "1") | (nda17$demo_race_a_p___14 == "1") | (nda17$demo_race_a_p___15 == "1") | (nda17$demo_race_a_p___16 == "1") | (nda17$demo_race_a_p___17 == "1") | (nda17$demo_race_a_p___25 == "1") | (nda17$demo_race_a_p___77 == "1") | (nda17$demo_race_a_p___99 == "1"))
-isOther[idx] = TRUE
-isOther[-idx] = FALSE
-
-race.ethnicity = rep("", length(nda17$demo_ethn_v2))
-for( i in 1:length(race.ethnicity)) {
-   if ( as.numeric(isWhite[i]==TRUE) + 
-        as.numeric(isBlack[i]==TRUE) + 
-        as.numeric(isHispa[i]==TRUE) + 
-        as.numeric(isAsian[i]==TRUE) + 
-        as.numeric(isOther[i]==TRUE) >= 2) {
-
-      ethnicity_recode = "999"
-      if ( (nda17$demo_ethn_v2[i] == 1) || (nda17$demo_ethn_v2[i] == 2) ) {
-         ethnicity_recode = nda17$demo_ethn_v2[i]
-      }
-      # even if you are mixed race or other, selecting hispanic ethnicity assigns the participant to the hispanic category
-      if (ethnicity_recode == 1) {
-         race.ethnicity[i] = 3
-      } else {
-         race.ethnicity[i] = 5
-      }
-      next
-   }
-   if (isWhite[i]) {
-      race.ethnicity[i] = 1
-   }
-   if (isBlack[i]) {
-      race.ethnicity[i] = 2
-   }
-   if (isHispa[i]) {
-      race.ethnicity[i] = 3
-   }
-   if (isAsian[i]) {
-      race.ethnicity[i] = 4
-   }
-   if (isOther[i]) {
-      race.ethnicity[i] = 5
-   }
-   # twin sites report asian as other
-   twinRecruitmentSites = c("site14", "site02", "site20", "site19")
-   if ( (nda17$abcd_site[i] %in% twinRecruitmentSites) && (nda17$rel_relationship %in% c("twin", "sibling")) ) {
-      # report other instead
-      if (race.ethnicity[i] == 4) race.ethnicity = 5
-   }
-}
-nda17$race.ethnicity = factor(race.ethnicity, levels = 1:5, labels=c("White","Black","Hispanic","Asian","Other"))
-```
 
 Save the new data frame again.
 ```r
