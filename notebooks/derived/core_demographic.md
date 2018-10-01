@@ -8,6 +8,7 @@ The following sections extend the nda17 data frame (see [creating a single data 
  - household.income
  - high.educ
  - married
+ - abcd_site
 
 Most of these are simple re-definitions of existing columns with simplier names, other columns are re-scored versions of nda17 columns.
 
@@ -18,6 +19,12 @@ nda17 = readRDS("nda17.Rds")
 
 Now extend nda17 by the new columns.
 
+### Site name
+The site name is anonymized and stored per event in case participants move from one site to another during the study.
+```r
+nda17$abcd_site = nda17$site_id_l
+```
+
 ### Subjectid
 
 ```r
@@ -25,9 +32,10 @@ nda17$subjectid = nda17$src_subject_id
 ```
 
 ### Age (in month)
-
+Get a better name for interview_age.
 ```r
 nda17$age = nda17$interview_age
+nda17$interview_age = NULL
 ```
 
 ### Female
@@ -159,7 +167,7 @@ nda17$married.livingtogether = factor( married.livingtogether, levels= 0:1, labe
 ### Body-Mass index
 
 ```r
-nda17$anthro_bmi_calc = as.numeric(as.character(nda17$anthro_weight_calc)) / as.numeric(as.character(nda17$anthro_height_calc))^2 * 703
+nda17$anthro_bmi_calc = as.numeric(as.character(nda17$anthroweightcalc)) / as.numeric(as.character(nda17$anthroheightcalc))^2 * 703
 ```
 
 ### A simplified race.ethnicity value
@@ -196,7 +204,9 @@ nda17$race.eth[ nda17$demo_race_nhpi == 1]  = 6
 nda17$race.eth[ nda17$demo_race_other == 1] = 7
 nda17$race.eth[ nda17$demo_race_mixed == 1] = 8
 
-nda17$race.eth[nda17$demo_ethn_v2 == "Yes"] = 1   
+nda17$race.eth[nda17$demo_ethn_v2 == "Yes"] = 1
+nda17$demo_race_hispanic = 0
+nda17$demo_race_hispanic[nda17$demo_ethn_v2 == "Yes"] = 1
 
 nda17$race.eth <- factor(nda17$race.eth,
                        levels = 1:8,
