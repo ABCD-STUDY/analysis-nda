@@ -37,7 +37,7 @@ Continuous variables are imported as characters from the NDA tables due to enclo
 if (!('curl' %in% installed.packages()[,"Package"]))  install.packages('curl')
 if (!('jsonlite' %in% installed.packages()[,"Package"]))  install.packages('jsonlite')
 library(jsonlite)
-abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD%20Release%201.0")
+abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD%20Release%201.1")
 numbers = list()
 pb <- txtProgressBar(min = 0, max = length(abcd_instruments$shortName), initial=NA, style = 3)
 for ( i in 1:length(abcd_instruments$shortName)) {

@@ -12,6 +12,18 @@ goodFreeSurfer <- goodFreeSurfer[!is.na(goodFreeSurfer)]
 print(paste("Yay: ", length(goodFreeSurfer), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$fsqc_qc)]) - length(goodFreeSurfer), sep=""))
 ```
 
+## Participants with good diffusion data
+
+To get a list of participant with good diffusion measures check for both, good FreeSurfer and good post-QC on diffusion:
+```r
+goodDTI <- nda17$src_subject_id[which(dmri_dti_postqc_qc == "1")]
+goodDTI <- goodDTI[!is.na(goodDTI)]
+goodDTI <- goodFreeSurfer && goodDTI
+print(paste("Yay: ", length(goodFreeSurfer), " Nay: ", length(nda17$src_subject_id[!is.na(nda17$fsqc_qc)]) - length(goodFreeSurfer), sep=""))
+```
+
+
+
 ## Participants with task data with a minimum degree of freedom
 
 One approach to rank participants is to use a threshold on the degrees of freedom to identify a percentage of participants with data of questionable quality.

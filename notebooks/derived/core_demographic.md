@@ -21,6 +21,7 @@ Now extend nda17 by the new columns.
 
 ### Site name
 The site name is anonymized and stored per event in case participants move from one site to another during the study.
+
 ```r
 nda17$abcd_site = nda17$site_id_l
 ```
@@ -35,7 +36,6 @@ nda17$subjectid = nda17$src_subject_id
 Get a better name for interview_age.
 ```r
 nda17$age = nda17$interview_age
-nda17$interview_age = NULL
 ```
 
 ### Female

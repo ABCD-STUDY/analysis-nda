@@ -128,7 +128,8 @@ while ( length(t2) > 1 ) {
     for (i in access) {
        bm = dim(t2[[i]])
        # merge by a list of columns that should be present in each instrument, replace the first element with the merge result
-       t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
+       # t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
+       t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","gender"), all=TRUE)
        # debugging output, 4,521 rows should survive the merge
        print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
