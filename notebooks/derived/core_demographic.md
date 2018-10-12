@@ -204,9 +204,9 @@ nda17$race.eth[ nda17$demo_race_nhpi == 1]  = 6
 nda17$race.eth[ nda17$demo_race_other == 1] = 7
 nda17$race.eth[ nda17$demo_race_mixed == 1] = 8
 
-nda17$race.eth[nda17$demo_ethn_v2 == "Yes"] = 1
+nda17$race.eth[nda17$demo_ethn_v2 == 1] = 1
 nda17$demo_race_hispanic = 0
-nda17$demo_race_hispanic[nda17$demo_ethn_v2 == "Yes"] = 1
+nda17$demo_race_hispanic[nda17$demo_ethn_v2 == 1] = 1
 
 nda17$race.eth <- factor(nda17$race.eth,
                        levels = 1:8,
