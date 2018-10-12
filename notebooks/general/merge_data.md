@@ -54,13 +54,16 @@ for (p in 1:length(tables)) {
 }
 ```
 
-To conserve memory lets remove any column that is empty. These columns might have been introduced because other projects use ABCD instruments or, in rare cases because data had to be sanitized before it was exported.
+To conserve memory we could remove columns that are empty. In the initial 1.0 release this happened for a lot of columns. In the current 1.1 release only about 2,000 columns are affected. Most of those are empty because they are secured by branching logic. Lets keep them in the merged dataset.
 ```r
+emptycolumns = list()
 for (p in 1:length(tables)) {
     dt = tables[[p]]
-    dt = dt[!sapply(dt, function(x) all((x=="")|(x=="NA")))]
-    tables[[p]] = dt
+    emptycolumns = append(emptycolumns,names(dt)[sapply(dt, function(x) all((x=="")|(x=="NA")))])
+    #dt = dt[!sapply(dt, function(x) all((x=="")|(x=="NA")))]
+    #tables[[p]] = dt
 }
+emptycolumn = unlist(emptycolumns)
 ```
 
 Sometimes the "eventname" column shared in many instruments is called "visit". Lets always use "eventname":
@@ -128,7 +131,7 @@ while ( length(t2) > 1 ) {
     for (i in access) {
        bm = dim(t2[[i]])
        # merge by a list of columns that should be present in each instrument, replace the first element with the merge result
-       # t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
+       #t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
        t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","gender"), all=TRUE)
        # debugging output, 4,521 rows should survive the merge
        print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))

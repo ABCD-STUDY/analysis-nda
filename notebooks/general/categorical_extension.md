@@ -31,31 +31,6 @@ for (kitty in categories$name) {
 }
 ```
 
-Continuous variables are imported as characters from the NDA tables due to enclosing double-quotes. We can convert them back into numerical values based on the type contained in the NDA data dictionary (and the known list of categorical variables):
-```r
-# pull and merge the data dictionaries for ABCD from NDA
-if (!('curl' %in% installed.packages()[,"Package"]))  install.packages('curl')
-if (!('jsonlite' %in% installed.packages()[,"Package"]))  install.packages('jsonlite')
-library(jsonlite)
-abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD%20Release%201.1")
-numbers = list()
-pb <- txtProgressBar(min = 0, max = length(abcd_instruments$shortName), initial=NA, style = 3)
-for ( i in 1:length(abcd_instruments$shortName)) {
-    setTxtProgressBar(pb, i)
-    inst_name = abcd_instruments$shortName[i]
-    inst <- fromJSON(paste("https://ndar.nih.gov/api/datadictionary/v2/datastructure/", inst_name, sep=""))
-    numbers = append(numbers, inst$dataElements[inst$dataElements$type %in% c("Integer","Float"),]$name)
-}
-close(pb)
-# remove known categorical variables
-numbers = numbers[!(numbers %in% categories$name)]
-pb <- txtProgressBar(min = 0, max = length(numbers), initial=NA, style = 3)
-for (i in 1:length(numbers)) {
-    setTxtProgressBar(pb, i)
-    nda17[unlist(numbers[i])] = as.numeric(as.character(nda17[[unlist(numbers[i])]]))
-}
-close(pb)
-```
 
 If we ignore knows categorical variables we can try to convert all other variables to numeric variables if their levels are numerical:
 
@@ -112,6 +87,11 @@ The following is not needed anymore: After this step some variables are still wr
 #for (i in 1:length(cont$name)) {
 #    nda17[[as.character(cont$name[i])]] = as.numeric(as.character(nda17[[as.character(cont$name[i])]]))
 #}
+```
+
+There is an interview_date in each instrument that is not currently used to merge. Lets remove all but one of those:
+```
+nda17[grep ("interview_date.", names(nda17))] = NULL
 ```
 
 We can save this new version of the ABCD data combined spreadsheet now:
