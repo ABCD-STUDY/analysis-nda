@@ -1844,11 +1844,6 @@ acs_wi_post_imp17,demo_acs_wi_post_imp17,acspsw02
 acs_wi_post_imp18,demo_acs_wi_post_imp18,acspsw02
 acs_wi_post_imp19,demo_acs_wi_post_imp19,acspsw02
 acs_wi_post_imp20,demo_acs_wi_post_imp20,acspsw02
-rel_family_id,demo_rel_family_id,acspsw02
-rel_group_id,demo_rel_group_id,acspsw02
-rel_relationship,demo_rel_relationship,acspsw02
-rel_same_sex,demo_rel_same_sex,acspsw02
-race_ethnicity,demo_race_ethnicity,acspsw02
 dna_blood_y,biospec_dna_blood,biocf01
 dna_blood_dot_y,biospec_dna_blood_date,biocf01
 dna_blood_recollect,biospec_dna_blood_recollect,biocf01
@@ -1868,9 +1863,7 @@ crpbi_caregiver15_y,crpbi_acceptance_caregiver15,crpbi01
 crpbi_caregiver16_y,crpbi_acceptance_caregiver16,crpbi01
 visit,eventname,dhx01
 accult_select_language,devhx_select_language_p,dhx01
-birth_weight_lbs,devhx_2_p,dhx01
 devhx_2_p_dk,devhx_2_dk_p,dhx01
-birth_weight_oz,devhx_2b_p,dhx01
 devhx_2b_p_dk,devhx_2b_dk_p,dhx01
 devhx_3_p_dk,devhx_3_dk_p,dhx01
 devhx_4_p_dk,devhx_4_dk_p,dhx01
