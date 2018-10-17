@@ -143,7 +143,7 @@ while ( length(t2) > 1 ) {
 }
 nda17 = t2[[1]]
 ```
-The nda17 data frame should contain 4,521 rows and about 38,000 columns. As a last step we can save the data in R's native file format (780MB).
+The nda17 data frame should contain 4,521 rows and about 30,000 columns. As a last step we can save the data in R's native file format (580MB).
 
 ```r
 saveRDS(nda17, "nda17_orig.Rds")
