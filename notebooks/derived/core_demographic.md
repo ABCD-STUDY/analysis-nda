@@ -14,7 +14,7 @@ Most of these are simple re-definitions of existing columns with simplier names,
 
 Start by reading in the merged data from disk.
 ```r
-nda17 = readRDS("nda17.Rds")
+nda17 = readRDS("nda17_orig.Rds")
 ```
 
 Now extend nda17 by the new columns.
@@ -53,21 +53,21 @@ nda17$sex = nda17$gender
 ### Household income
 
 ```r
-household.income = as.character(nda17$demo_comb_income_v2)
-household.income[nda17$demo_comb_income_v2 == "1"] = "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "2"] = "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "3"] = "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "4"] = "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "5"] = "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "6"] = "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "7"] = "[>=50K & <100K]"
-household.income[nda17$demo_comb_income_v2 == "8"] = "[>=50K & <100K]"
-household.income[nda17$demo_comb_income_v2 == "9"] = "[>=100K]"
-household.income[nda17$demo_comb_income_v2 == "10"] = "[>=100K]"
+household.income = nda17$demo_comb_income_v2
+household.income[nda17$demo_comb_income_v2 == "1"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "2"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "3"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "4"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "5"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "6"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2 == "7"] = 2 # "[>=50K & <100K]"
+household.income[nda17$demo_comb_income_v2 == "8"] = 2 # "[>=50K & <100K]"
+household.income[nda17$demo_comb_income_v2 == "9"] = 3 # "[>=100K]"
+household.income[nda17$demo_comb_income_v2 == "10"] = 3 # "[>=100K]"
 household.income[nda17$demo_comb_income_v2 == "777"] = NA
 household.income[nda17$demo_comb_income_v2 == "999"] = NA
 household.income[household.income %in% c(NA, "999", "777")] = NA
-nda17$household.income = factor(household.income)
+nda17$household.income = factor( household.income, levels= 1:3, labels = c("[<50K]", "[>=50K & <100K]", "[>=100K]") )
 ```
 
 ### Highest level of parental education
@@ -120,7 +120,7 @@ highest.education2[nda17$demo_prtnr_ed_v2 == "20"] = 23
 highest.education2[nda17$demo_prtnr_ed_v2 == "21"] = 24
 highest.education2[nda17$demo_prtnr_ed_v2 == "777"] = 999
 highest.education2[highest.education2 == 999] = NA
-nda17$highest.education = factor( as.character(pmax(as.numeric(highest.education), as.numeric(highest.education2),na.rm=T)) )
+nda17$highest.education = factor( as.character(pmax(as.numeric(highest.education), as.numeric(highest.education2),na.rm=T)), levels=c(9,10,11,12,13,14,15,16,17,18,20,21,22,23,24), labels=c("9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "20", "21", "22", "23", "24") )
 ```
 
 Here a simplified version of the highest education that results in only 5 different levels. These levels correspond to the numbers published by the American Community Survey (ACS). 
@@ -133,18 +133,18 @@ high.educ1[which(high.educ1 == "777")] = NA
 high.educ2[which(high.educ2 == "777")] = NA
 high.educ = pmax(as.numeric(as.character(high.educ1)), as.numeric(as.character(high.educ2)), na.rm=T)
 idx <- which(high.educ %in% 0:12, arr.ind = TRUE)
-high.educ[idx] = "< HS Diploma"
+high.educ[idx] = 1 # "< HS Diploma"
 idx <- which(high.educ %in% 13:14, arr.ind = TRUE)
-high.educ[idx] = "HS Diploma/GED"
+high.educ[idx] = 2 # "HS Diploma/GED"
 idx <- which(high.educ %in% 15:17, arr.ind = TRUE)
-high.educ[idx] = "Some College"
+high.educ[idx] = 3 # "Some College"
 idx <- which(high.educ == 18, arr.ind = TRUE)
-high.educ[idx] = "Bachelor"
+high.educ[idx] = 4 # "Bachelor"
 idx <- which(high.educ %in% 19:21, arr.ind = TRUE)
-high.educ[idx] = "Post Graduate Degree"
+high.educ[idx] = 5 # "Post Graduate Degree"
 high.educ[which(high.educ == "999")]=NA
 high.educ[which(high.educ == "777")]=NA
-nda17$high.educ <- factor(high.educ)
+nda17$high.educ = factor( high.educ, levels= 1:5, labels = c("< HS Diploma","HS Diploma/GED","Some College","Bachelor","Post Graduate Degree") )
 ```
 
 ### Marrital status
@@ -204,9 +204,9 @@ nda17$race.eth[ nda17$demo_race_nhpi == 1]  = 6
 nda17$race.eth[ nda17$demo_race_other == 1] = 7
 nda17$race.eth[ nda17$demo_race_mixed == 1] = 8
 
-nda17$race.eth[nda17$demo_ethn_v2 == 1] = 1
+nda17$race.eth[nda17$demo_ethn_p == 1] = 1
 nda17$demo_race_hispanic = 0
-nda17$demo_race_hispanic[nda17$demo_ethn_v2 == 1] = 1
+nda17$demo_race_hispanic[nda17$demo_ethn_p == 1] = 1
 
 nda17$race.eth <- factor(nda17$race.eth,
                        levels = 1:8,
