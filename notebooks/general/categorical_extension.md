@@ -12,6 +12,7 @@ categories = read.csv('choices_coding.csv')
 This loop will go throught the column names stored in the categories table and convert those columns in the nda17 data frame to factor variables.
 
 ```r
+# test this with su_tlfb_alc_sip (should not have a factor level for NA)
 for (kitty in categories$name) {
     if (!(kitty %in% names(nda17))) next
     choices = strsplit(as.character(categories[categories$name == kitty,]$choices), "|",fixed=TRUE)
@@ -28,7 +29,10 @@ for (kitty in categories$name) {
         lev[which(lev == number)] = label
     }
     nda17[[kitty]] = factor(nda17[[kitty]],levels=orig_levels, labels=lev)
+    #if (!is.null(nda17[nda17[[kitty]] == "",]))
+    nda17[[kitty]][nda17[[kitty]] == ""] = NA
 }
+nda17 = droplevels(nda17)
 ```
 
 
