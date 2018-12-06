@@ -209,8 +209,8 @@ nda17$demo_race_hispanic = 0
 nda17$demo_race_hispanic[nda17$demo_ethn_p == 1] = 1
 
 nda17$race.eth <- factor(nda17$race.eth,
-                       levels = 1:8,
-                       labels = c("Hispanic", "White", "Black", "Asian", "AIAN", "NHPI", "Other", "Mixed") ) 
+                       levels = c(2,1,3,4,5,6,7,8),
+                       labels = c("White", "Hispanic", "Black", "Asian", "AIAN", "NHPI", "Other", "Mixed") ) 
 ```
 The above race.eth value has more categories compared to what has been used recently in ABCD. Here is the reduced definition of race/ethnicity used most frequently
 ```r
