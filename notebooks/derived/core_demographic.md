@@ -14,7 +14,8 @@ Most of these are simple re-definitions of existing columns with simplier names,
 
 Start by reading in the merged data from disk.
 ```r
-nda17 = readRDS("nda17_orig.Rds")
+setwd("~/Documents/projects/in_progress/spatial_topography_parcellations_ABCD/code/analysis-nda17/data")
+nda17 = readRDS("nda17.Rds")
 ```
 
 Now extend nda17 by the new columns.

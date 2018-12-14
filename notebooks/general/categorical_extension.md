@@ -6,7 +6,7 @@ Read in the merged data (see [merge_data](notebooks/general/merge_data.md)) and 
 
 ```r
 nda17 = readRDS("nda17.Rds")
-categories = read.csv('choices_coding.csv')
+categories = read.csv(paste0(getwd(),'/../notebooks/general/choices_coding.csv'))
 ```
 
 This loop will go throught the column names stored in the categories table and convert those columns in the nda17 data frame to factor variables.
