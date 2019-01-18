@@ -52,20 +52,22 @@ nda17$sex = nda17$gender
 
 ### Household income
 
+The demo_comb_income_v2 variable has been renamed in the merge script to demo_comb_income_v2b (the ABCD name listed in NDA_DEAP_names_1.1.csv).
+
 ```r
-household.income = nda17$demo_comb_income_v2
-household.income[nda17$demo_comb_income_v2 == "1"] = 1 # "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "2"] = 1 # "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "3"] = 1 # "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "4"] = 1 # "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "5"] = 1 # "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "6"] = 1 # "[<50K]"
-household.income[nda17$demo_comb_income_v2 == "7"] = 2 # "[>=50K & <100K]"
-household.income[nda17$demo_comb_income_v2 == "8"] = 2 # "[>=50K & <100K]"
-household.income[nda17$demo_comb_income_v2 == "9"] = 3 # "[>=100K]"
-household.income[nda17$demo_comb_income_v2 == "10"] = 3 # "[>=100K]"
-household.income[nda17$demo_comb_income_v2 == "777"] = NA
-household.income[nda17$demo_comb_income_v2 == "999"] = NA
+household.income = nda17$demo_comb_income_v2b
+household.income[nda17$demo_comb_income_v2b == "1"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2b == "2"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2b == "3"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2b == "4"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2b == "5"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2b == "6"] = 1 # "[<50K]"
+household.income[nda17$demo_comb_income_v2b == "7"] = 2 # "[>=50K & <100K]"
+household.income[nda17$demo_comb_income_v2b == "8"] = 2 # "[>=50K & <100K]"
+household.income[nda17$demo_comb_income_v2b == "9"] = 3 # "[>=100K]"
+household.income[nda17$demo_comb_income_v2b == "10"] = 3 # "[>=100K]"
+household.income[nda17$demo_comb_income_v2b == "777"] = NA
+household.income[nda17$demo_comb_income_v2b == "999"] = NA
 household.income[household.income %in% c(NA, "999", "777")] = NA
 nda17$household.income = factor( household.income, levels= 1:3, labels = c("[<50K]", "[>=50K & <100K]", "[>=100K]") )
 ```
@@ -149,22 +151,25 @@ nda17$high.educ = factor( high.educ, levels= 1:5, labels = c("< HS Diploma","HS 
 
 ### Marrital status
 
+The demo_prnt_marital_v2 variable has also been renamed in NDA_DEAP_names_1.1.csv to demo_prnt_marital_v2b.
+
 ```r
-married = rep("0", length(nda17$demo_prnt_marital_v2))
-married[as.numeric(nda17$demo_prnt_marital_v2) == 1] = 1
-married[as.numeric(nda17$demo_prnt_marital_v2) == 7] = NA
+married = rep("0", length(nda17$demo_prnt_marital_v2b))
+married[as.numeric(nda17$demo_prnt_marital_v2b) == 1] = 1
+married[as.numeric(nda17$demo_prnt_marital_v2b) == 7] = NA
 nda17$married = factor( married, levels= 0:1, labels = c("no", "yes") )
 ```
 Add another variable that also includes couples that just live together. 
 ```r
-married.livingtogether = rep("0", length(nda17$demo_prnt_marital_v2))
-married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 1 | as.numeric(nda17$demo_prnt_marital_v2) == 6] = 1
-married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2) == 7] = NA
+married.livingtogether = rep("0", length(nda17$demo_prnt_marital_v2b))
+married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2b) == 1 | as.numeric(nda17$demo_prnt_marital_v2b) == 6] = 1
+married.livingtogether[as.numeric(nda17$demo_prnt_marital_v2b) == 7] = NA
 nda17$married.livingtogether = factor( married.livingtogether, levels= 0:1, labels = c("no", "yes") )
 ```
 
 
 ### Body-Mass index
+There could be a problem here with NDA_DEAP_names_1.1.csv because anthroweightcalc has not been renamed to anthro_weight_calc - probably because the name of the instrument "abcd_ant01" is not the correct name for this item (needs to be checked).
 
 ```r
 nda17$anthro_bmi_calc = as.numeric(as.character(nda17$anthroweightcalc)) / as.numeric(as.character(nda17$anthroheightcalc))^2 * 703
