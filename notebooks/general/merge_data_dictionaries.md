@@ -12,7 +12,7 @@ We start by pulling the list of all ABCD instruments from NDA:
 ```r
 library(jsonlite)
 
-abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD%20Release%201.0")
+abcd_instruments <- fromJSON("https://ndar.nih.gov/api/datadictionary/v2/datastructure?source=ABCD%20Release%202.0")
 # print the list
 abcd_instruments$shortName
 ```
@@ -22,12 +22,13 @@ The next step downloads the NDA versions of each ABCD data dictionary and merges
 dd = data.frame()
 for ( i in 1:length(abcd_instruments$shortName)) {
     inst_name = abcd_instruments$shortName[i]
+    print(paste("Try to get: ", inst_name))
     inst <- fromJSON(paste("https://ndar.nih.gov/api/datadictionary/v2/datastructure/", inst_name, sep=""))
     inst = inst$dataElements
     # The alias names for each element name are in a list, concatenate that list into a single string
     aliases = lapply(inst$aliases, function(x) { str = ""; if (length(x) > 0) { for( i in 1:length(x)) { str = paste(str, x[[i]], sep=" ") } }; trimws(str);})
     # create a new data frame
-    nd = data.frame("Element Name"=inst$name, "Element Description"=inst$description, "type"=inst$type, "valueRange"=inst$valueRange, "notes"=inst$notes, "aliases"=unlist(aliases))
+    nd = data.frame("Element Name"=inst$name, "Element Description"=inst$description, "type"=inst$type, "valueRange"=inst$valueRange, "notes"=inst$notes, "aliases"=unlist(aliases), "NDA Instrument"=inst_name)
     # and merge
     if (dim(dd)[1] == 0) { dd <- nd } else { dd <- merge(dd, nd,all=TRUE) }
     print(paste("Merged", inst_name, i,"/",length(abcd_instruments$shortName),sep=" "))
