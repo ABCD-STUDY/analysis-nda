@@ -34,7 +34,7 @@ for ( i in 1:length(abcd_instruments$shortName)) {
     print(paste("Merged", inst_name, i,"/",length(abcd_instruments$shortName),sep=" "))
 }
 ```
-The resulting data dictionary will have close to 43,000 entries. Only about 38,000 are actually provided by ABCD and contain values.
+The resulting data dictionary will have close to 66,000 entries. Only about 38,000 are actually provided by ABCD and contain values.
 
 Save the merged data dictionary as a spreadsheet.
 ```r
@@ -43,3 +43,16 @@ print(paste("write data dictionary to ",fname,sep=""))
 write.csv(dd,fname)
 ```
 
+Since release 2.0 the NDA dictionary contains all the alias names used on the DEAP system. In order to generate the NDA_DEAP_names_2.0.csv we can use the following code:
+```r
+numAliases = length(which(!is.na(dd$aliases)))
+aliasNames = data.frame("nda"=character(numAliases), "abcd"=character(numAliases), "instrument"=character(numAliases))
+for (i in 1:dim(dd)[1]) {
+  if (dd[i,]$aliases != "") {
+    # There can be a list of alias names. We want to use only a single alias and we want to prefer to use the alias that is longest.
+    alias = strsplit(as.character(dd[i,]$aliases), " ")[[1]][1]
+    aliasNames[i,] = data.frame("nda"=dd[i,]$Element.Name,"abcd"=alias,"instrument"=as.character(dd[i,]$NDA.Instrument))
+  }
+}
+write.csv(aliasNames, "NDA_DEAP_names_2.0.csv")
+```
