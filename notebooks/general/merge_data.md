@@ -30,7 +30,14 @@ for (p in 1:length(input_list)) {
     print(paste("import: ", input, " [", p, "/",length(input_list), "]", sep=""))
 
     # read data from the tab-separated files as characters, don't use the usual comment character (can be in second row of item description)
-    dt = read.table(file = input, sep = '\t',header = TRUE, comment.char = "")
+    dt <- tryCatch({
+      a = read.csv(file = input, sep = '\t',header = TRUE, row.names=NULL, comment.char = "", quote="", check.names=FALSE)
+      a = as.data.frame(sapply(a, function(x) gsub("\"", "", x)))
+      names(a) = as.list(sapply(names(a), function(x) gsub("\"", "", x)))
+      return(a)
+    }, error = function(e) {
+      return(read.table(file = input, sep = '\t',header = TRUE))
+    })
 
     # replace variable names from nda with their alias names to make them more like ABCD
     instrument = sub('\\.txt$', '', basename(input_list[p]))
