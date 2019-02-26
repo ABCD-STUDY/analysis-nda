@@ -34,9 +34,10 @@ for (p in 1:length(input_list)) {
       a = read.csv(file = input, sep = '\t',header = TRUE, row.names=NULL, comment.char = "", quote="", check.names=FALSE)
       a = as.data.frame(sapply(a, function(x) gsub("\"", "", x)))
       names(a) = as.list(sapply(names(a), function(x) gsub("\"", "", x)))
-      return(a)
+      a
     }, error = function(e) {
-      return(read.table(file = input, sep = '\t',header = TRUE))
+       print(e)
+      read.table(file = input, sep = '\t',header = TRUE)
     })
 
     # replace variable names from nda with their alias names to make them more like ABCD
@@ -110,7 +111,8 @@ for (p in 1:length(tables)) {
     dt = tables[[p]]
     if (!("eventname" %in% names(dt))) 
       dt$eventname = "baseline_year_1_arm_1"
-#       print(paste(input_list[p], p))
+    if ("lmt_subject_id" %in% names(dt))
+      dt$src_subject_id = dt$lmt_subject_id
     tables[[p]] = dt
 }
 ```
