@@ -53,11 +53,32 @@ for (p in 1:length(input_list)) {
 }
 ```
 
+Until NDA has removed duplicate uploads we need to remove them. This code should become obsolete once the data has been released.
+
+```r
+for (p in 1:length(tables)) {
+    dt = tables[[p]]
+    a = summary(dt$dataset_id)
+    # how many entries are there not counting the threes
+    aa = a[which(a != 3)]
+    maxid = as.character(names(which(aa == max(aa))))
+    threeid = names(a[which(a == 3)])
+    ok_ids = list(maxid)
+    # separate upload of 3 participants
+    if (any(which(a == 3))) {
+       if (maxid != threeid)
+         ok_ids = unlist(list(ok_ids, threeid))
+    }
+    tables[[p]] = dt[dt$dataset_id %in% ok_ids,]
+}
+```
+
+
 The first row in each spreadsheet is the element description. Lets remove those for our data tables. This information is already present in the [ABCD Data Dictionaries](https://ndar.nih.gov/data_dictionary.html?source=ABCD%2BRelease%2B2.0&submission=ALL).
 ```r
 for (p in 1:length(tables)) {
     dt = tables[[p]]
-    dt = dt[-1,]
+#    dt = dt[-1,]
     dt = droplevels(dt)
     tables[[p]] = dt
 }
@@ -111,6 +132,7 @@ for (p in 1:length(tables)) {
     dt = tables[[p]]
     if (!("eventname" %in% names(dt))) 
       dt$eventname = "baseline_year_1_arm_1"
+    # we should replace this with the correct alias in the csv
     if ("lmt_subject_id" %in% names(dt))
       dt$src_subject_id = dt$lmt_subject_id
     tables[[p]] = dt
@@ -158,7 +180,7 @@ while ( length(t2) > 1 ) {
 }
 nda17 = t2[[1]]
 ```
-The nda17 data frame should contain 4,521 rows and about 30,000 columns. As a last step we can save the data in R's native file format (580MB).
+The nda17 data frame should contain 11,875 rows and about 66,000 columns. As a last step we can save the data in R's native file format (580MB).
 
 ```r
 saveRDS(nda17, "nda17_orig.Rds")
