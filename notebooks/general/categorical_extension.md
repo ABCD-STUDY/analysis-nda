@@ -9,14 +9,14 @@ nda18 = readRDS("nda18.Rds")
 categories = read.csv('choices_coding_nda18.csv')
 ```
 
-This loop will go throught the column names stored in the categories table and convert those columns in the nda17 data frame to factor variables.
+This loop will go throught the column names stored in the categories table and convert those columns in the nda18 data frame to factor variables.
 
 ```r
 # test this with su_tlfb_alc_sip (should not have a factor level for NA)
 for (kitty in categories$name) {
-    if (!(kitty %in% names(nda17))) next
+    if (!(kitty %in% names(nda18))) next
     choices = strsplit(as.character(categories[categories$name == kitty,]$choices), "|",fixed=TRUE)
-    lev = levels(nda17[[kitty]])
+    lev = levels(nda18[[kitty]])
     orig_levels = lev
     for (c in 1:length(choices[[1]])) {
         choice = choices[[1]][c]
