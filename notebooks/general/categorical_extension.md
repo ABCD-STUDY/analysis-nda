@@ -5,8 +5,8 @@ Categorical variables are coded on NDA as numbers even if they have been collect
 Read in the merged data (see [merge_data](notebooks/general/merge_data.md)) and a table that contains the factors for each categorical variable. The second table is stored in a csv file that is part of this repository and has been generated from the original REDCap data dictionaries.
 
 ```r
-nda17 = readRDS("nda17.Rds")
-categories = read.csv('choices_coding.csv')
+nda18 = readRDS("nda18.Rds")
+categories = read.csv('choices_coding_nda18.csv')
 ```
 
 This loop will go throught the column names stored in the categories table and convert those columns in the nda17 data frame to factor variables.
@@ -28,34 +28,33 @@ for (kitty in categories$name) {
         label = trimws(label)
         lev[which(lev == number)] = label
     }
-    nda17[[kitty]] = factor(nda17[[kitty]],levels=orig_levels, labels=lev)
-    #if (!is.null(nda17[nda17[[kitty]] == "",]))
-    nda17[[kitty]][nda17[[kitty]] == ""] = NA
+    nda18[[kitty]] = factor(nda18[[kitty]],levels=orig_levels, labels=lev)
+    nda18[[kitty]][nda18[[kitty]] == ""] = NA
 }
-nda17 = droplevels(nda17)
+nda18 = droplevels(nda18)
 ```
 
 
 If we ignore knows categorical variables we can try to convert all other variables to numeric variables if their levels are numerical:
 
 ```r
-ncols = ncol(nda17)
-colnames = names(nda17)
-data_clean = nda17
+ncols = ncol(nda18)
+colnames = names(nda18)
+data_clean = nda18
 typevec = NA
 nlevvec = rep(NA,length(typevec))
 is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol | is.na(x)
 for (coli in 3:ncols) {
-  levvec = levels(as.factor(as.character(nda17[,coli])))
+  levvec = levels(as.factor(as.character(nda18[,coli])))
   nlev = length(levvec)
   levvec.numeric = suppressWarnings(as.numeric(levvec))
   nnum = sum((!is.na(levvec.numeric))|(levvec=="")|(levvec=="NA")) 
   nempty = sum(levvec==""|(levvec=="NA"))
   nlevvec[coli] = nlev
-  if (names(nda17)[coli] %in% categories$name) {
+  if (names(nda18)[coli] %in% categories$name) {
       typevec[coli] = 'Categorical'
   } else if (nnum==nlev) { # All numeric
-    data_clean[,coli] = as.numeric(as.character(nda17[,coli]))
+    data_clean[,coli] = as.numeric(as.character(nda18[,coli]))
     nint = sum(is.wholenumber(levvec.numeric))
     if (nint==nlev) {
       typevec[coli] = 'Integer'
@@ -73,7 +72,7 @@ for (coli in 3:ncols) {
   }
   cat(sprintf('%5d: type=%s nlev=%d (%s)\n',coli,typevec[coli],nlevvec[coli],colnames[coli]))
 }
-nda17 = data_clean
+nda18 = data_clean
 # Ambiguius columns
 #colnames[typevec=='Ambiguous']
 
@@ -85,22 +84,9 @@ nda17 = data_clean
 #which((typevec=='Integer')&(nlevvec==1))
 ```
 
-The following is not needed anymore: After this step some variables are still wrongly encoded as text. Usually this is the case for values that are imported from external vendors. A mix of continuous values and text fields like comments might prevent an automatic conversion for these columns. If we assume that the text entries can be mapped to missing values we can convert more factor variables to numbers:
-```r
-#cont = read.csv('continuous_coding_fix.csv')
-#for (i in 1:length(cont$name)) {
-#    nda17[[as.character(cont$name[i])]] = as.numeric(as.character(nda17[[as.character(cont$name[i])]]))
-#}
-```
-
-There is an interview_date in each instrument that is not currently used to merge. Lets remove all but one of those:
-```
-nda17[grep ("interview_date.", names(nda17))] = NULL
-```
-
 We can save this new version of the ABCD data combined spreadsheet now:
 ```r
-saveRDS(nda17, "nda17.Rds")
+saveRDS(nda18, "nda18.Rds")
 ```
 
 Looking at the factor levels you will find that some of them are more difficult to read than others. Some contain HTML instructions for two language versions (English and Spanish) for each level. For dropdown entries the language encoding cannot use HTML, instead the following pattern is used: '##en##English##/en## ##es##Spanish##/es##'.

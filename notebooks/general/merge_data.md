@@ -1,10 +1,11 @@
 ## Merge NDA18 2.0 data into a single spreadsheet
 
-Starting from the official download package "Study634" the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless the code below is provided to illustrate some of the perculiarities of the data.
+Starting from the official download package "ABCDstudyNDA" (Study 634) the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless, the code below is provided to illustrate some of the perculiarities of the data.
 
-We will assume that you downloaded the spreadsheet data (11GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
+We will assume that you downloaded the spreadsheet data (7.1GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
+rm(list=ls())
 script.dir <- "~/src/analysis-nda17/notebooks/general"
 setwd(script.dir)
 input_list = Sys.glob(paths = c(paste(script.dir,"/../../data/*.txt",sep="")))
@@ -13,10 +14,17 @@ input_list = Sys.glob(paths = c(paste(script.dir,"/../../data/*.txt",sep="")))
 Remove all files that are not required for this merge. This includes files that are related to the download process as well as files that reference the raw data sharing (Fast-Track).
 
 ```r
-if (length(grep("package_info.txt",input_list)) > 0) input_list = input_list[-grep("package_info.txt",input_list)]
-if (length(grep("fmriresults01.txt",input_list)) > 0) input_list = input_list[-grep("fmriresults01.txt",input_list)]
-if (length(grep("genomics_sample03.txt",input_list)) > 0) input_list = input_list[-grep("genomics_sample03.txt",input_list)]
-if (length(grep("aurora01.txt",input_list)) > 0) input_list = input_list[-grep("aurora01.txt",input_list)]
+if (length(which(grepl("package_info",input_list))) > 0) input_list = input_list[-which(grepl("package_info",input_list))]
+if (length(which(grepl("fmriresults01",input_list))) > 0) input_list = input_list[-which(grepl("fmriresults01",input_list))]
+if (length(which(grepl("genomics_sample03",input_list))) > 0) input_list = input_list[-which(grepl("genomics_sample03",input_list))]
+if (length(which(grepl("aurora01",input_list))) > 0) input_list = input_list[-which(grepl("aurora01",input_list))]
+if (length(which(grepl("omics_experiments",input_list))) > 0) input_list = input_list[-which(grepl("omics_experiments",input_list))]
+if (length(which(grepl("errors",input_list))) > 0) input_list = input_list[-which(grepl("errors",input_list))]
+
+instrument.name=NULL
+for(p in 1:length(input_list)){
+    instrument.name[p] = gsub('*.txt$|.txt', '', basename(input_list[p])) 
+}
 ```
 
 Read each of the tables into memory. This loop will run for several minutes and requires close to 8GB of main memory. While reading the files the alias_mapping spreadsheet is used to replace Element Names from nda with the corresponding alias names (alias column in NDA data dictionaries). This improves the consistency and readability of the column names.
@@ -41,7 +49,7 @@ for (p in 1:length(input_list)) {
     })
 
     # replace variable names from nda with their alias names to make them more like ABCD
-    instrument = sub('\\.txt$', '', basename(input_list[p]))
+    instrument=instrument.name[p]
     ali  = alia[which(alia$instrument == instrument),]
     nn = names(dt)
     for (q in 1:length(nn)) {
@@ -53,76 +61,57 @@ for (p in 1:length(input_list)) {
 }
 ```
 
-Until NDA has removed duplicate uploads we need to remove them. This code should become obsolete once the data has been released.
-
-```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-    a = summary(dt$dataset_id)
-    # how many entries are there not counting the threes
-    aa = a[which(a != 3)]
-    maxid = as.character(names(which(aa == max(aa))))
-    threeid = names(a[which(a == 3)])
-    ok_ids = list(maxid)
-    # separate upload of 3 participants
-    if (any(which(a == 3))) {
-       if (maxid != threeid)
-         ok_ids = unlist(list(ok_ids, threeid))
-    }
-    tables[[p]] = dt[dt$dataset_id %in% ok_ids,]
-}
-```
-
-
 The first row in each spreadsheet is the element description. Lets remove those for our data tables. This information is already present in the [ABCD Data Dictionaries](https://ndar.nih.gov/data_dictionary.html?source=ABCD%2BRelease%2B2.0&submission=ALL).
 ```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-#    dt = dt[-1,]
-    dt = droplevels(dt)
-    tables[[p]] = dt
+len.tables=length(tables)
+for (p in 1:len.tables) {
+  dt = tables[[p]]
+  dt = dt[-1,]
+  dt = droplevels(dt)
+  tables[[p]] = dt
 }
 ```
 
-To conserve memory we could remove columns that are empty. In the initial 1.0 release this happened for a lot of columns. In the current 1.1 release only about 2,000 columns are affected. Most of those are empty because they are secured by branching logic. Lets keep them in the merged dataset.
+Sometimes the "eventname" column shared in many instruments is called "visit". In freesqc01 both columns exist and are different:
 ```r
-emptycolumns = list()
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-    emptycolumns = append(emptycolumns,names(dt)[sapply(dt, function(x) all((x=="")|(x=="NA")))])
-    #dt = dt[!sapply(dt, function(x) all((x=="")|(x=="NA")))]
-    #tables[[p]] = dt
-}
-emptycolumn = unlist(emptycolumns)
-```
-
-Sometimes the "eventname" column shared in many instruments is called "visit". Lets always use "eventname":
-```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-    if ("visit" %in% names(dt))
-       dt$eventname = dt$visit
-#      print(paste(p, input_list[p], levels(dt$visit)))
-    tables[[p]] = dt
+for (p in 1:len.tables) {
+  dt = tables[[p]]
+  if ("visit" %in% names(dt) ){
+     print(p)
+      print(instrument.name[p])
+      dt$eventname = dt$visit
+  }
+  tables[[p]] = dt
 }
 ```
 
 Drop columns introduced by NDA, they are not required in the resulting table.
 
 ```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-    dt = dt[,!(names(dt) %in% c("collection_id", "dataset_id", "collection_title", "promoted_subjectkey", "subjectkey", "study_cohort_name"))]
-    tables[[p]] = dt
+for (p in 1:len.tables) {
+  dt = tables[[p]]
+  dt = dt[,!(names(dt) %in% c("collection_id", "collection_title", "promoted_subjectkey", "subjectkey", "study_cohort_name"))]
+  tables[[p]] = dt
 }
+lt01.indx=which(instrument.name=="abcd_lt01"); #longitudinal tracking
 ```
 
-There are some other columns that appear in more than on instrument. The last merge step would introduce duplicate columns if they remain in the data.
+There are some other columns that appear in more than on instrument. The last merge step would introduce duplicate columns if they remain in the data. Remove interview_age and interview_date from all instrument but keepig lt01 as anchor.
+
 ```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-    dt = dt[,!(names(dt) %in% c("visit", "lmt_run"))]
-    tables[[p]] = dt
+rm.vars=c("visit","interview_age","interview_date","gender") #back to gender again
+for (p in 1:len.tables) {
+  dt = tables[[p]]
+  if (instrument.name[p]=="abcd_midabwdp201"){ #both "abcd_midabwdp201" and "abcd_midabwdp01" have the same variables (same values), delete one;
+    dt = dt[,!(names(dt) %in% c("tfmri_mid_all_antic.large.vs.small.reward_beta_cort.destrieux_g.front.inf.orbital.rh",rm.vars))]
+   
+  } else if (instrument.name[p] == "abcd_dmdtifp201"){ #both abcd_dmdtifp101 and abcd_dmdtifp201 have the same variable, delete one;
+    dt = dt[,!(names(dt) %in% c("dmri_dtifull_visitid",rm.vars))]
+  } else if (p != lt01.indx){
+    dt = dt[,!(names(dt) %in% rm.vars)] 
+  }
+  
+  tables[[p]] = dt
 }
 ```
 
@@ -139,12 +128,32 @@ for (p in 1:length(tables)) {
 }
 ```
 
-Imaging spreadsheets use a different structure for the eventname column that depends on the site, the participant and the date and time of the scan. In order to align the imaging with the non-imaging data lets set the event name to "baseline_year_1_arm_1".
+Starting with release 2.0 the ABCD study releases data for more than the baseline event. Lets get the sample size for each event:
 ```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-#    dt$eventname = "baseline_year_1_arm_1"
-    tables[[p]] = dt
+lt.bl=tables[[lt01.indx]][which(tables[[lt01.indx]]$eventname=="baseline_year_1_arm_1"),]
+dim(lt.bl)
+
+lt.1yr=tables[[lt01.indx]][which(tables[[lt01.indx]]$eventname=="1_year_follow_up_y_arm_1"),]
+dim(lt.1yr)
+
+lt.18m=tables[[lt01.indx]][which(tables[[lt01.indx]]$eventname=="18_month_follow_up_arm_1"),]
+dim(lt.18m)
+
+lt.6m=tables[[lt01.indx]][which(tables[[lt01.indx]]$eventname=="6_month_follow_up_arm_1"),]
+dim(lt.6m)
+
+# total in 4 events
+dim(lt.bl)[1] +  dim(lt.1yr)[1] +  dim(lt.18m)[1] +  dim(lt.6m)[1]
+
+event.tot=c(dim(lt.bl)[1] ,  dim(lt.1yr)[1]  ,  dim(lt.18m)[1] ,  dim(lt.6m)[1])
+diff.event=c("baseline_year_1_arm_1","1_year_follow_up_y_arm_1","18_month_follow_up_arm_1","6_month_follow_up_arm_1")
+# check: if any table without eventname 
+for (p in 1:len.tables) {
+  dt = tables[[p]]
+  if (!("eventname" %in% names(dt))) {
+    print(p)
+    print(instrument.name[p])
+  }
 }
 ```
 
@@ -161,16 +170,16 @@ Now we can merge the individual tables into a single spreadsheet. The following 
 
 ```r
 t2 = tables
+rm(tables)
 while ( length(t2) > 1 ) {
     print("iteration")
     access= seq(1,length(t2)-1,2)
     for (i in access) {
        bm = dim(t2[[i]])
-       # merge by a list of columns that should be present in each instrument, replace the first element with the merge result
-       #t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","interview_date","gender"), all=TRUE)
-       # interview_date is not in abcd_ysuip01, don't use for merging
-       t2[[i]] = merge(t2[[i]], t2[[i+1]], by=c("src_subject_id","eventname","interview_age","gender"), all=TRUE)
-       # debugging output, 4,521 rows should survive the merge
+
+       by.vars=c("src_subject_id","eventname")
+       t2[[i]] = merge(t2[[i]], t2[[i+1]], by=by.vars, all=TRUE)
+
        print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], " = ",dim(t2[[i]])[2]))
     }
     # for odd number of instruments add the last spreadsheet back to the list
@@ -178,17 +187,20 @@ while ( length(t2) > 1 ) {
     # reduce the list
     t2 = t2[access]
 }
-nda17 = t2[[1]]
+nda18 = t2[[1]]
+nda18=nda18[,-which(grepl("dataset_id",colnames(nda18)))]
 ```
-The nda17 data frame should contain 11,875 rows and about 66,000 columns. As a last step we can save the data in R's native file format (580MB).
+The nda18 data frame should contain 11,875 rows and about 66,000 columns. As a last step we can save the data in R's native file format (580MB).
 
 ```r
-saveRDS(nda17, "nda17_orig.Rds")
+saveRDS(nda18, "nda18_orig.Rds")
+names.nda18=colnames(nda18)
+save(file="names.nda18.RData",names.nda18)
 ```
 
-In order to read the data back into memory (5.5GB) use:
+In order to read the data back into memory use:
 ```r
-nda17 = readRDS("nda17_orig.Rds")
+nda18 = readRDS("nda18_orig.Rds")
 ```
 
 The next step in processing the data is adding the core demographics [core_demographcs](../derived/core_demographics.md).
