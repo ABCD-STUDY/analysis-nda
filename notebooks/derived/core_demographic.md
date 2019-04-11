@@ -23,7 +23,7 @@ Now extend nda18 by the new columns.
 The site name is anonymized and stored per event in case participants move from one site to another during the study.
 
 ```r
-nda17$abcd_site = nda17$site_id_l
+nda18$abcd_site = nda18$site_id_l
 ```
 
 ### Subjectid

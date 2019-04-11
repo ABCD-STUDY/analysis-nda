@@ -190,7 +190,7 @@ while ( length(t2) > 1 ) {
 nda18 = t2[[1]]
 nda18=nda18[,-which(grepl("dataset_id",colnames(nda18)))]
 ```
-The nda18 data frame should contain 11,875 rows and about 66,000 columns. As a last step we can save the data in R's native file format (580MB).
+The nda18 data frame should contain 27,368 rows and about 66,000 columns. As a last step we can save the data in R's native file format (3.8GB).
 
 ```r
 saveRDS(nda18, "nda18_orig.Rds")
