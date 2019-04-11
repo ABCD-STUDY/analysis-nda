@@ -2,6 +2,8 @@
 
 Starting from the official download package "ABCDstudyNDA" (Study 634) the R-code below will merge the data tables into a single large spreadsheet. Please notice, that this might not be the most efficient way to handle the data. In general we would suggest to use a database layout and packages like dplyr. Nevertheless, the code below is provided to illustrate some of the perculiarities of the data.
 
+There are three sets of instructions that should be run on order. This file (merge_data) the core_demographics, followed by the categorical_extension.
+
 We will assume that you downloaded the spreadsheet data (7.1GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r

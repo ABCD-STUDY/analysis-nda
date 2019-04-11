@@ -75,62 +75,62 @@ nda18$household.income = factor( household.income, levels= 1:3, labels = c("[<50
 ```
 
 ### Highest level of parental education
-This can be either the first (demo_prnt_ed_v2) or the second (demo_prtnr_ed_v2) parent.
+This can be either the first (demo_prnt_ed_v2b) or the second (demo_prtnr_ed_v2b) parent.
 ```r
-highest.education = rep("999", length(nda18$demo_prnt_ed_v2))
-highest.education[nda18$demo_prnt_ed_v2 == "0"] = 1
-highest.education[nda18$demo_prnt_ed_v2 == "1"] = 4
-highest.education[nda18$demo_prnt_ed_v2 == "2"] = 5
-highest.education[nda18$demo_prnt_ed_v2 == "3"] = 6
-highest.education[nda18$demo_prnt_ed_v2 == "4"] = 7
-highest.education[nda18$demo_prnt_ed_v2 == "5"] = 8
-highest.education[nda18$demo_prnt_ed_v2 == "6"] = 9
-highest.education[nda18$demo_prnt_ed_v2 == "7"] = 10
-highest.education[nda18$demo_prnt_ed_v2 == "8"] = 11
-highest.education[nda18$demo_prnt_ed_v2 == "9"] = 12
-highest.education[nda18$demo_prnt_ed_v2 == "10"] = 13
-highest.education[nda18$demo_prnt_ed_v2 == "11"] = 14
-highest.education[(nda18$demo_prnt_ed_v2 == "12") | (nda18$demo_prnt_ed_v2 == "13")] = 16
-highest.education[nda18$demo_prnt_ed_v2 == "14"] = 17
-highest.education[nda18$demo_prnt_ed_v2 == "15"] = 18
-highest.education[(nda18$demo_prnt_ed_v2 == "16") | (nda18$demo_prnt_ed_v2 == "17")] = 20
-highest.education[nda18$demo_prnt_ed_v2 == "18"] = 21
-highest.education[nda18$demo_prnt_ed_v2 == "19"] = 22
-highest.education[nda18$demo_prnt_ed_v2 == "20"] = 23
-highest.education[nda18$demo_prnt_ed_v2 == "21"] = 24
-highest.education[nda18$demo_prnt_ed_v2 == "777"] = 999
+highest.education = rep("999", length(nda18$demo_prnt_ed_v2b))
+highest.education[nda18$demo_prnt_ed_v2b == "0"] = 1
+highest.education[nda18$demo_prnt_ed_v2b == "1"] = 4
+highest.education[nda18$demo_prnt_ed_v2b == "2"] = 5
+highest.education[nda18$demo_prnt_ed_v2b == "3"] = 6
+highest.education[nda18$demo_prnt_ed_v2b == "4"] = 7
+highest.education[nda18$demo_prnt_ed_v2b == "5"] = 8
+highest.education[nda18$demo_prnt_ed_v2b == "6"] = 9
+highest.education[nda18$demo_prnt_ed_v2b == "7"] = 10
+highest.education[nda18$demo_prnt_ed_v2b == "8"] = 11
+highest.education[nda18$demo_prnt_ed_v2b == "9"] = 12
+highest.education[nda18$demo_prnt_ed_v2b == "10"] = 13
+highest.education[nda18$demo_prnt_ed_v2b == "11"] = 14
+highest.education[(nda18$demo_prnt_ed_v2b == "12") | (nda18$demo_prnt_ed_v2b == "13")] = 16
+highest.education[nda18$demo_prnt_ed_v2b == "14"] = 17
+highest.education[nda18$demo_prnt_ed_v2b == "15"] = 18
+highest.education[(nda18$demo_prnt_ed_v2b == "16") | (nda18$demo_prnt_ed_v2b == "17")] = 20
+highest.education[nda18$demo_prnt_ed_v2b == "18"] = 21
+highest.education[nda18$demo_prnt_ed_v2b == "19"] = 22
+highest.education[nda18$demo_prnt_ed_v2b == "20"] = 23
+highest.education[nda18$demo_prnt_ed_v2b == "21"] = 24
+highest.education[nda18$demo_prnt_ed_v2b == "777"] = 999
 highest.education[highest.education == 999] = NA
 
-highest.education2 = rep("999", length(nda18$demo_prtnr_ed_v2))
-highest.education2[nda18$demo_prtnr_ed_v2 == "0"] = 1
-highest.education2[nda18$demo_prtnr_ed_v2 == "1"] = 4
-highest.education2[nda18$demo_prtnr_ed_v2 == "2"] = 5
-highest.education2[nda18$demo_prtnr_ed_v2 == "3"] = 6
-highest.education2[nda18$demo_prtnr_ed_v2 == "4"] = 7
-highest.education2[nda18$demo_prtnr_ed_v2 == "5"] = 8
-highest.education2[nda18$demo_prtnr_ed_v2 == "6"] = 9
-highest.education2[nda18$demo_prtnr_ed_v2 == "7"] = 10
-highest.education2[nda18$demo_prtnr_ed_v2 == "8"] = 11
-highest.education2[nda18$demo_prtnr_ed_v2 == "9"] = 12
-highest.education2[nda18$demo_prtnr_ed_v2 == "10"] = 13
-highest.education2[nda18$demo_prtnr_ed_v2 == "11"] = 14
-highest.education2[(nda18$demo_prtnr_ed_v2 == "12") | (nda18$demo_prtnr_ed_v2 == "13")] = 16
-highest.education2[nda18$demo_prtnr_ed_v2 == "14"] = 17
-highest.education2[nda18$demo_prtnr_ed_v2 == "15"] = 18
-highest.education2[(nda18$demo_prtnr_ed_v2 == "16") | (nda18$demo_prtnr_ed_v2 == "17")] = 20
-highest.education2[nda18$demo_prtnr_ed_v2 == "18"] = 21
-highest.education2[nda18$demo_prtnr_ed_v2 == "19"] = 22
-highest.education2[nda18$demo_prtnr_ed_v2 == "20"] = 23
-highest.education2[nda18$demo_prtnr_ed_v2 == "21"] = 24
-highest.education2[nda18$demo_prtnr_ed_v2 == "777"] = 999
+highest.education2 = rep("999", length(nda18$demo_prtnr_ed_v2b))
+highest.education2[nda18$demo_prtnr_ed_v2b == "0"] = 1
+highest.education2[nda18$demo_prtnr_ed_v2b == "1"] = 4
+highest.education2[nda18$demo_prtnr_ed_v2b == "2"] = 5
+highest.education2[nda18$demo_prtnr_ed_v2b == "3"] = 6
+highest.education2[nda18$demo_prtnr_ed_v2b == "4"] = 7
+highest.education2[nda18$demo_prtnr_ed_v2b == "5"] = 8
+highest.education2[nda18$demo_prtnr_ed_v2b == "6"] = 9
+highest.education2[nda18$demo_prtnr_ed_v2b == "7"] = 10
+highest.education2[nda18$demo_prtnr_ed_v2b == "8"] = 11
+highest.education2[nda18$demo_prtnr_ed_v2b == "9"] = 12
+highest.education2[nda18$demo_prtnr_ed_v2b == "10"] = 13
+highest.education2[nda18$demo_prtnr_ed_v2b == "11"] = 14
+highest.education2[(nda18$demo_prtnr_ed_v2b == "12") | (nda18$demo_prtnr_ed_v2b == "13")] = 16
+highest.education2[nda18$demo_prtnr_ed_v2b == "14"] = 17
+highest.education2[nda18$demo_prtnr_ed_v2b == "15"] = 18
+highest.education2[(nda18$demo_prtnr_ed_v2b == "16") | (nda18$demo_prtnr_ed_v2b == "17")] = 20
+highest.education2[nda18$demo_prtnr_ed_v2b == "18"] = 21
+highest.education2[nda18$demo_prtnr_ed_v2b == "19"] = 22
+highest.education2[nda18$demo_prtnr_ed_v2b == "20"] = 23
+highest.education2[nda18$demo_prtnr_ed_v2b == "21"] = 24
+highest.education2[nda18$demo_prtnr_ed_v2b == "777"] = 999
 highest.education2[highest.education2 == 999] = NA
 nda18$highest.education = factor( as.character(pmax(as.numeric(highest.education), as.numeric(highest.education2),na.rm=T)), levels=c(9,10,11,12,13,14,15,16,17,18,20,21,22,23,24), labels=c("9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "20", "21", "22", "23", "24") )
 ```
 
 Here a simplified version of the highest education that results in only 5 different levels. These levels correspond to the numbers published by the American Community Survey (ACS). 
 ```r
-high.educ1 = nda18$demo_prnt_ed_v2
-high.educ2 = nda18$demo_prtnr_ed_v2
+high.educ1 = nda18$demo_prnt_ed_v2b
+high.educ2 = nda18$demo_prtnr_ed_v2b
 high.educ1[which(high.educ1 == "999")] = NA
 high.educ2[which(high.educ2 == "999")] = NA
 high.educ1[which(high.educ1 == "777")] = NA
@@ -203,18 +203,21 @@ nda18$demo_race_mixed = nda18$demo_race_white + nda18$demo_race_black + nda18$de
 nda18$demo_race_mixed[ nda18$demo_race_mixed <= 1] =  0
 nda18$demo_race_mixed[ nda18$demo_race_mixed > 1] =  1
 
-nda18$race.eth = NA
-nda18$race.eth[ nda18$demo_race_white == 1] = 2
-nda18$race.eth[ nda18$demo_race_black == 1] = 3
-nda18$race.eth[ nda18$demo_race_asian == 1] = 4
-nda18$race.eth[ nda18$demo_race_aian == 1]  = 5
-nda18$race.eth[ nda18$demo_race_nhpi == 1]  = 6
-nda18$race.eth[ nda18$demo_race_other == 1] = 7
-nda18$race.eth[ nda18$demo_race_mixed == 1] = 8
+nda18$race.eth.8level = NA
+nda18$race.eth.8level[ nda18$demo_race_white == 1] = 2
+nda18$race.eth.8level[ nda18$demo_race_black == 1] = 3
+nda18$race.eth.8level[ nda18$demo_race_asian == 1] = 4
+nda18$race.eth.8level[ nda18$demo_race_aian == 1]  = 5
+nda18$race.eth.8level[ nda18$demo_race_nhpi == 1]  = 6
+nda18$race.eth.8level[ nda18$demo_race_other == 1] = 7
+nda18$race.eth.8level[ nda18$demo_race_mixed == 1] = 8
 
-nda18$race.eth[nda18$demo_ethn_p == 1] = 1
-nda18$demo_race_hispanic = 0
-nda18$demo_race_hispanic[nda18$demo_ethn_p == 1] = 1
+nda18$race.eth.8level[nda18$demo_ethn_p == 1] = 1
+
+
+nda18$demo_race_hispanic=NA;
+nda18$demo_race_hispanic[nda18$demo_ethn_p == 1] =1
+nda18$demo_race_hispanic[nda18$demo_ethn_p == 2] =0
 
 nda18$race.eth.8level <- factor(nda18$race.eth.8level,
                        levels = c(2,1,3,4,5,6,7,8),
