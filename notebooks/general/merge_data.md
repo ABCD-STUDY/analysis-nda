@@ -4,11 +4,11 @@ Starting from the official download package "ABCDstudyNDA" (Study 634) the R-cod
 
 There are three sets of instructions that should be run on order. This file (merge_data) the core_demographics, followed by the categorical_extension.
 
-We will assume that you downloaded the spreadsheet data (7.1GB) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
+We will assume that you downloaded the spreadsheet data (7.7GB) from the [NIMH data archive](https://data-archive.nimh.nih.gov/abcd/query/abcd-interim-annual-release-2.0.html) and placed them in the directory "data" of the root folder of this project. Specify the path and read in a list of all the text files provided.
 
 ```r
 rm(list=ls())
-script.dir <- "~/src/analysis-nda17/notebooks/general"
+script.dir <- "~/src/analysis-nda/notebooks/general"
 setwd(script.dir)
 input_list = Sys.glob(paths = c(paste(script.dir,"/../../data/*.txt",sep="")))
 ```
@@ -29,7 +29,7 @@ for(p in 1:length(input_list)){
 }
 ```
 
-Read each of the tables into memory. This loop will run for several minutes and requires close to 8GB of main memory. While reading the files the alias_mapping spreadsheet is used to replace Element Names from nda with the corresponding alias names (alias column in NDA data dictionaries). This improves the consistency and readability of the column names.
+Read each of the tables into memory. This loop will run for several minutes and requires close to 32GB of main memory. While reading the files the alias_mapping spreadsheet is used to replace Element Names from nda with the corresponding alias names (alias column in NDA data dictionaries). This improves the consistency and readability of the column names.
 
 ```r
 alia = read.csv('NDA_DEAP_names_2.0.csv')
@@ -98,10 +98,10 @@ for (p in 1:len.tables) {
 lt01.indx=which(instrument.name=="abcd_lt01"); #longitudinal tracking
 ```
 
-There are some other columns that appear in more than on instrument. The last merge step would introduce duplicate columns if they remain in the data. Remove interview_age and interview_date from all instrument but keepig lt01 as anchor.
+There are some other columns that appear in more than one instrument. The last merge step would introduce duplicate columns if they remain in the data. Remove interview_age and interview_date from all instrument but keeping lt01 as anchor.
 
 ```r
-rm.vars=c("visit","interview_age","interview_date","gender") #back to gender again
+rm.vars=c("visit","interview_age","interview_date","gender")
 for (p in 1:len.tables) {
   dt = tables[[p]]
   if (instrument.name[p]=="abcd_midabwdp201"){ #both "abcd_midabwdp201" and "abcd_midabwdp01" have the same variables (same values), delete one;
@@ -114,19 +114,6 @@ for (p in 1:len.tables) {
   }
   
   tables[[p]] = dt
-}
-```
-
-Add back the eventname column if it does not exist. This assumes that we are working with the NDA-18 baseline data. Currently there are two instruments that don't have that column. The Mobile technology instrument used for the Fitbit pilot (baseline only) and the fmriresults instrument used for sharing minimally processed data (baseline only).
-```r
-for (p in 1:length(tables)) {
-    dt = tables[[p]]
-    if (!("eventname" %in% names(dt))) 
-      dt$eventname = "baseline_year_1_arm_1"
-    # we should replace this with the correct alias in the csv
-    if ("lmt_subject_id" %in% names(dt))
-      dt$src_subject_id = dt$lmt_subject_id
-    tables[[p]] = dt
 }
 ```
 
@@ -192,7 +179,7 @@ while ( length(t2) > 1 ) {
 nda18 = t2[[1]]
 nda18=nda18[,-which(grepl("dataset_id",colnames(nda18)))]
 ```
-The nda18 data frame should contain 27,368 rows and about 66,000 columns. As a last step we can save the data in R's native file format (3.8GB).
+The nda18 data frame should contain 27,368 rows (baseline: 11,875; 6 month: 8,623; 1 year: 4,951; and 18 month: 1,919) and about 65,800 columns. As a last step we can save the data in R's native file format (4.4GB).
 
 ```r
 saveRDS(nda18, "nda18_orig.Rds")
@@ -205,7 +192,7 @@ In order to read the data back into memory use:
 nda18 = readRDS("nda18_orig.Rds")
 ```
 
-The next step in processing the data is adding the core demographics [core_demographcs](../derived/core_demographics.md).
+The next step in processing the data is adding the core demographics [core_demographcs](notebooks/derived/core_demographic.md).
 
 ### Notes
 

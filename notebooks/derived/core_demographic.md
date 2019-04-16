@@ -3,6 +3,7 @@
 The following sections extend the nda18 data frame (see [creating a single data spreadsheet](https://github.com/ABCD-STUDY/analysis-nda17#create-a-single-data-spreadsheet) and [create categorical variables](https://github.com/ABCD-STUDY/analysis-nda/blob/master/notebooks/general/categorical_extension.md)) by some core demographic columns.
  - subjectid
  - age in years
+ - sex
  - female
  - race.ethnicity
  - household.income
@@ -10,7 +11,7 @@ The following sections extend the nda18 data frame (see [creating a single data 
  - married
  - abcd_site
 
-Most of these are simple re-definitions of existing columns with simplier names, other columns are re-scored versions of nda17 columns.
+Most of these are simple re-definitions of existing columns with simpler names, other columns are re-scored versions of nda17 columns.
 
 Start by reading in the merged data from disk.
 ```r
@@ -38,23 +39,24 @@ Get a better name for interview_age.
 nda18$age = nda18$interview_age
 ```
 
+### Sex
+On NDA the "gender" variable is listed as containing "Sex at birth". Lets create a copy called "sex" and reset empty to NA.
+```
+nda18$sex = nda18$gender
+nda18$sex[which(nda18$sex=="")]=NA
+nda18$sex=factor( nda18$sex, levels= c("F","M") )
+```
+
 ### Female
 
 ```r
 nda18$female = factor(as.numeric(nda18$gender == "F"), levels = 0:1, labels = c("no", "yes") ) 
 ```
 
-On NDA the "gender" variable is listed as containing "Sex at birth". Lets create a copy called "sex".
-```
-nda18$sex = nda18$gender
-nda18$sex[which(nda18$sex=="")]=NA
-nda18$sex=factor( nda18$sex, levels= c("F","M"))
-```
-
 
 ### Household income
 
-The demo_comb_income_v2 variable has been renamed in the merge script to demo_comb_income_v2b (the ABCD name listed in NDA_DEAP_names_1.1.csv).
+The demo_comb_income_v2 variable has been renamed in the merge script to demo_comb_income_v2b (the ABCD name listed in NDA_DEAP_names_2.0.csv).
 
 ```r
 household.income = nda18$demo_comb_income_v2b
@@ -153,7 +155,7 @@ nda18$high.educ = factor( high.educ, levels= 1:5, labels = c("< HS Diploma","HS 
 
 ### Marrital status
 
-The demo_prnt_marital_v2 variable has also been renamed in NDA_DEAP_names_1.1.csv to demo_prnt_marital_v2b.
+The demo_prnt_marital_v2 variable has also been renamed in NDA_DEAP_names_2.0.csv to demo_prnt_marital_v2b.
 
 ```r
 married = rep(NA, length(nda18$demo_prnt_marital_v2b))
@@ -171,7 +173,6 @@ nda18$married.or.livingtogether = factor( married.livingtogether, levels= 0:1, l
 
 
 ### Body-Mass index
-There could be a problem here with NDA_DEAP_names_1.1.csv because anthroweightcalc has not been renamed to anthro_weight_calc - probably because the name of the instrument "abcd_ant01" is not the correct name for this item (needs to be checked).
 
 ```r
 nda18$anthro_bmi_calc = as.numeric(as.character(nda18$anthro_weight_calc)) / as.numeric(as.character(nda18$anthro_height_calc))^2 * 703
@@ -180,7 +181,7 @@ nda18$anthro_bmi_calc[which(nda18$anthro_bmi_calc>100)]=NA
 
 ### A simplified race.ethnicity value
 
-ABCD is using a simplified 5 category race/ethnicity scale for reporting purposes and for comparison of the ABCD cohort to data from the American Community Census. The following code will add a new 'race_ethnicity' column to the NDA-17 data frame that implement this scale.
+ABCD is using a simplified 5 category race/ethnicity scale for reporting purposes and for comparison of the ABCD cohort to data from the American Community Census. The following code will add a new 'race_ethnicity' column to the NDA-18 data frame that implement this scale.
 
 ```r
 nda18$demo_race_white= (nda18$demo_race_a_p___10 == 1)*1
