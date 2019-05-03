@@ -87,6 +87,11 @@ for (p in 1:len.tables) {
 }
 ```
 
+We can also sort the levels of eventname by timepoint. 
+```
+nda18$eventname = factor(nda18$eventname, levels(nda18$eventname)[c(2,4,1,3)])
+```
+
 Drop columns introduced by NDA, they are not required in the resulting table.
 
 ```r
