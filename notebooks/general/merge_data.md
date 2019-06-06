@@ -87,11 +87,6 @@ for (p in 1:len.tables) {
 }
 ```
 
-We can also sort the levels of eventname by timepoint. 
-```
-nda18$eventname = factor(nda18$eventname, levels(nda18$eventname)[c(2,4,1,3)])
-```
-
 Drop columns introduced by NDA, they are not required in the resulting table.
 
 ```r
@@ -184,6 +179,12 @@ while ( length(t2) > 1 ) {
 nda18 = t2[[1]]
 nda18=nda18[,-which(grepl("dataset_id",colnames(nda18)))]
 ```
+
+As a nicety we can sort the levels of eventname by timepoint. 
+```
+nda18$eventname = factor(nda18$eventname, levels(nda18$eventname)[c(2,4,1,3)])
+```
+
 The nda18 data frame should contain 27,368 rows (baseline: 11,875; 6 month: 8,623; 1 year: 4,951; and 18 month: 1,919) and about 65,800 columns. As a last step we can save the data in R's native file format (4.4GB).
 
 ```r
