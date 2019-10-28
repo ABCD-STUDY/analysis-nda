@@ -1,24 +1,13 @@
-## A collection of analysis scripts for NDA-18
+## Create a single data Rds file for ABCD release 2.0.1. More details can be found and downloaded at : https://nda.nih.gov/study.html?id=796
 
-The NDA-18 data release contains data for the full baseline 11,875 participants of the Adolescent Brain, Cognitive Development study. This repository contains a collection of scripts developed at ABCD's Data Analysis and Informatics Center (DAIC, UC San Diego) to process data that is part of this release of ABCD data.
+###Step 1: download pre-packaged data (including updated tables from release 2.0.1 and unchanged tables from release 2.0)
 
-The data for this release can be downloaded from NDA using a pre-generated package "ABCD-RELEASE-2" using the Download Manager tool provided by NDA. Place the data into the data folder of this project.
+###Step 2: Run merge_data to merge instruments
 
-#### Create a single data spreadsheet
- - [Merge individual spreadsheets (using R)](notebooks/general/merge_data.md)
+###Step 3: Run core_demographics to recode/create few core demographic variables
 
-#### Recode values
- - [Recode some core demographic variables (using R)](notebooks/derived/core_demographic.md)
+###Step 4: Run categorical_extension to recover categorical variables as factor and numerical variables as numeric and redefine "race" variable.
 
-#### Recover variable types
- - [Recover categorical variables (using R)](notebooks/general/categorical_extension.md)
+###Step 5: Run merge.additional.variables to merge additional derived variables
 
-
-#### Create a single data dictionary
- - [Merge individual data dictionaries (using R)](notebooks/general/merge_data_dictionaries.md)
-
-#### Other
- - [Impute missing core demographic variables (using R)](notebooks/general/impute_demographics.md)
- - [Quality control metrices for image data (using R)](notebooks/derived/image_qc.md)
-
-Let us know if you have a script that you think should be part of this project.
+###Note: The R codes have to be run in that order; two csv files, choices_coding_nda2.0.1 and NDA_DEAP_names_2.0.1, in this folder are called by R codes during the process. Memory size >=32GB is recommended.
