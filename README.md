@@ -5,16 +5,16 @@
 ### Step 1: download pre-packaged data (including updated tables from release 2.0.1 and unchanged tables from release 2.0)
 
 ### Step 2: Run merge_data to merge instruments
-- [Merge using R markdown](notebooks/general/merge_data.Rmd)
+- [Merge using R markdown](notebooks/general/merge_data.md)
 
 ### Step 3: Run core_demographics to recode/create few core demographic variables
 - [Recode some core demographic variables (using R markdown)](notebooks/derived/core_demographics.md)
 
 ### Step 4: Run categorical_extension to recover categorical variables as factor and numerical variables as numeric and redefine "race" variable. 
- - [Recover categorical variables (using R markdown)](notebooks/general/categorical_extension.Rmd)
+ - [Recover categorical variables (using R markdown)](notebooks/general/categorical_extension.md)
 
 ### Step 5: Run merge.additional.variables to merge additional derived variables
- - [Merge additional variables (using R markdown)](notebooks/general/merge.additional.variables.Rmd)
+ - [Merge additional variables (using R markdown)](notebooks/general/merge.additional.variables.md)
 
 ### Notes: 
 - The R codes have to be run in that order; 
