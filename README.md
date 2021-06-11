@@ -1,4 +1,4 @@
-## Create a single data Rds file for ABCD release 2.0.1.
+## Create a single data Rds file for ABCD release 3.0.
 
  More details can be found and downloaded at [NDA ABCD RDS release website] (https://nda.nih.gov/study.html?id=796)
 
@@ -18,7 +18,7 @@
 
 ### Notes: 
 - The R codes have to be run in that order; 
-- For additional help information check it [here](Notes.to.DAIRC.txt)
+- For additional help information check it [here](Notes.to.DAIRC.txt).
 - Two csv files, choices_coding_nda2.0.1.csv and NDA_DEAP_names_2.0.1.csv are called by R codes during the process. Memory size >=32GB is recommended.
 
 The ABCD data collection and scoring instruments are shared on the NDA platform as NDA data dictionaries. As there are substantial differences between the REDCap data collection instruments used by ABCD and the NDA structure for data dictionaries here a short map implemented by the export application https://github.com/ABCD-STUDY/redcap-to-nda, which explain how ABCD REDCap instruments are translated into NDA data sharing instruments during data export:
