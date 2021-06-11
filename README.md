@@ -5,19 +5,20 @@
 ### Step 1: download pre-packaged data (including updated tables from release 2.0.1 and unchanged tables from release 2.0)
 
 ### Step 2: Run merge_data to merge instruments
-- [Merge using R markdown](notebooks/general/merge_data.md)
+- [Merge using R file](notebooks/general/data_merge_nda.3.0.R)
 
 ### Step 3: Run core_demographics to recode/create few core demographic variables
-- [Recode some core demographic variables (using R markdown)](notebooks/derived/core_demographics.md)
+- [Recode some core demographic variables](notebooks/general/core_demographics3.0.R)
 
 ### Step 4: Run categorical_extension to recover categorical variables as factor and numerical variables as numeric and redefine "race" variable. 
- - [Recover categorical variables (using R markdown)](notebooks/general/categorical_extension.md)
+ - [Recover categorical variables](notebooks/general/categorical_extension3.0.R)
 
 ### Step 5: Run merge.additional.variables to merge additional derived variables
- - [Merge additional variables (using R markdown)](notebooks/general/merge.additional.variables.md)
+ - [Merge additional variables](notebooks/general/merge.additional.variables.R)
 
 ### Notes: 
 - The R codes have to be run in that order; 
+- For additional help information check it [here](Notes.to.DAIRC.txt)
 - Two csv files, choices_coding_nda2.0.1.csv and NDA_DEAP_names_2.0.1.csv are called by R codes during the process. Memory size >=32GB is recommended.
 
 The ABCD data collection and scoring instruments are shared on the NDA platform as NDA data dictionaries. As there are substantial differences between the REDCap data collection instruments used by ABCD and the NDA structure for data dictionaries here a short map implemented by the export application https://github.com/ABCD-STUDY/redcap-to-nda, which explain how ABCD REDCap instruments are translated into NDA data sharing instruments during data export:

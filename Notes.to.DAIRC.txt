@@ -1,0 +1,49 @@
+
+#generate non_image RDS (in this order)
+data_merge_nda.3.0.R -> core_demographics3.0.R -> categorical_extension3.0.R -> merge.additional.variables.R
+
+
+#generate image_1 and image_2 RDS (in this order)
+data_merge_nda.3.0.R -> categorical_extension3.0.R
+
+#Remember to change variable type accordingly in R code: 
+when merge non_image: type="non_image"; 
+when merge image_1: type="image_1"; 
+when merge image_2, type="image_2"
+
+
+#final dimensions of the 3 RDS:
+non_image:54594 14740 
+image_1:18449 29042 (baseline and 2 year  only)
+image_2:18449 26606 (baseline and 2 year  only)
+
+#total columns if further merging the 3 RDS
+#14740+29042+26606-12=70376 
+
+#abcd_lt01 (longitudinal track)is merged into all 3 RDS, so there are shared variables across 3 RDS:
+"src_subject_id" "eventname"      "interview_date" "interview_age"  "sex" "site_id_l" 
+
+Use non_image as anchor to merge further, by "src_subject_id" and "eventname" 
+Remove "interview_date" "interview_age"  "sex" "site_id_l" from image_1 and image_2 before merge
+
+
+#number of subjects released by event:
+table(nda3.0$eventname)
+1_year_follow_up_y_arm_1 2_year_follow_up_y_arm_1    baseline_year_1_arm_1 18_month_follow_up_arm_1 30_month_follow_up_arm_1  6_month_follow_up_arm_1 
+                   11235                     6571                    11878                     9911                     3601                    11398 
+
+
+#All the data used are here:
+./SYNC/abcd_3.0_imaging_tabulated_1
+./SYNC/abcd_3.0_imaging_tabulated_2
+./SYNC/ABCD_3.0_non_imaging_tabulated
+
+#in case of re-merging, use the updated table(s) to replace the current table(s). Be careful, there is slight difference of format between  non-imaging tables
+#and imaging tables (just go to open any one from both categories, you will see. Non-imaging tables, the first row is discharged during merging in my R code; 
+#imaging table, first row is fine.
+
+#error in tables have been cleaned up (even some are still here, you will see the correction in R code during merge).
+#abcd_fbwpas01 and abcd_fbwss01 in ./SYNC/ABCD_3.0_non_imaging_tabulated are the wide-format already
+
+
+
